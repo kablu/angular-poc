@@ -1,0 +1,1220 @@
+================================================================================
+  JavaScript & HTML Interview Questions & Answers
+  Level: 8+ Years Experience (Senior / Lead)
+  Total: 35 Questions (25 JavaScript + 10 HTML)
+================================================================================
+
+
+════════════════════════════════════════════════════════════════════════════════
+  JAVASCRIPT QUESTIONS
+════════════════════════════════════════════════════════════════════════════════
+
+────────────────────────────────────────────────────────────────────────────────
+Q1. What is the Event Loop? Explain Call Stack, Microtask Queue, and Macrotask
+    Queue with an example.
+    [Type: Theoretical | Level: Advanced]
+────────────────────────────────────────────────────────────────────────────────
+
+ANSWER:
+  JavaScript is single-threaded. The Event Loop is the mechanism that allows
+  non-blocking async operations despite that.
+
+  - Call Stack      : Executes synchronous code LIFO (last in, first out).
+  - Microtask Queue : Holds Promise.then, queueMicrotask, MutationObserver.
+                      Runs completely empty before any macrotask.
+  - Macrotask Queue : Holds setTimeout, setInterval, I/O, UI paint.
+                      One macrotask runs per loop tick.
+
+  Example:
+  --------
+  // What is the output?
+  console.log('1');
+
+  setTimeout(() => console.log('2'), 0);
+
+  new Promise(resolve => {
+    console.log('3');
+    resolve();
+  }).then(() => console.log('4'));
+
+  console.log('5');
+
+  Output: 1 → 3 → 5 → 4 → 2
+
+  Rule: Sync → Microtasks (all) → One Macrotask → Microtasks (all) → repeat.
+
+
+────────────────────────────────────────────────────────────────────────────────
+Q2. Explain Closure. Write a counter factory using closure. Why does the classic
+    loop + setTimeout bug happen and how to fix it?
+    [Type: Practical + Tricky]
+────────────────────────────────────────────────────────────────────────────────
+
+ANSWER:
+  A closure is a function that retains access to its outer lexical scope even
+  after that scope has returned.
+
+  Counter Factory:
+  ----------------
+  function makeCounter(start = 0) {
+    let count = start;
+    return {
+      increment: () => ++count,
+      decrement: () => --count,
+      value:     () => count,
+    };
+  }
+  const c = makeCounter(10);
+  c.increment(); // 11
+  c.value();     // 11
+
+  Classic Bug (prints 5,5,5,5,5):
+  --------------------------------
+  for (var i = 0; i < 5; i++) {
+    setTimeout(() => console.log(i), 100);
+  }
+
+  Fix 1 — use let (block scope):
+  for (let i = 0; i < 5; i++) {
+    setTimeout(() => console.log(i), 100);
+  }
+
+  Fix 2 — IIFE closure:
+  for (var i = 0; i < 5; i++) {
+    ((j) => setTimeout(() => console.log(j), 100))(i);
+  }
+
+  Why? var is function-scoped — all callbacks share the same `i`.
+  let creates a new binding per iteration.
+
+
+────────────────────────────────────────────────────────────────────────────────
+Q3. What is Prototypal Inheritance? How does Object.create differ from
+    class extends?
+    [Type: Theoretical | Level: Advanced]
+────────────────────────────────────────────────────────────────────────────────
+
+ANSWER:
+  Every JS object has an internal [[Prototype]] link. Property lookup walks
+  this chain until null.
+
+  Object.create — pure prototype chain:
+  --------------------------------------
+  const animal = {
+    speak() { return `${this.name} makes a sound`; }
+  };
+  const dog = Object.create(animal);
+  dog.name = 'Rex';
+  dog.speak(); // "Rex makes a sound"
+
+  class syntax (syntactic sugar over prototype):
+  -----------------------------------------------
+  class Animal {
+    constructor(name) { this.name = name; }
+    speak() { return `${this.name} speaks`; }
+  }
+  class Dog extends Animal {
+    speak() { return `${this.name} barks`; }
+  }
+
+  Key: class also sets up the prototype chain the same way — it's purely
+  syntactic sugar. Unlike classical OOP, properties aren't copied; they're
+  looked up via the chain.
+
+
+────────────────────────────────────────────────────────────────────────────────
+Q4. Explain `this` binding rules. What does `this` refer to in arrow functions
+    vs regular functions?
+    [Type: Tricky + Practical]
+────────────────────────────────────────────────────────────────────────────────
+
+ANSWER:
+  `this` is determined at call time (except arrow functions which use lexical
+  scope).
+
+  Rules:
+  - Default binding  : global / undefined in strict mode
+  - Implicit binding : left of the dot — obj.fn() → this = obj
+  - Explicit binding : call, apply, bind
+  - new binding      : newly created object
+  - Arrow            : inherits `this` from enclosing lexical scope,
+                       cannot be changed
+
+  Example:
+  --------
+  const obj = {
+    name: 'JS',
+    regular() { return this.name; },         // 'JS'
+    arrow:  () => this?.name ?? 'undefined', // undefined — lexical this
+  };
+
+  const fn = obj.regular;
+  fn();           // undefined (default binding)
+  fn.call(obj);   // 'JS' (explicit)
+  const bound = fn.bind(obj);
+  bound();        // 'JS'
+
+
+────────────────────────────────────────────────────────────────────────────────
+Q5. Implement Promise.all, Promise.allSettled, and Promise.race from scratch.
+    [Type: Practical | Level: Advanced]
+────────────────────────────────────────────────────────────────────────────────
+
+ANSWER:
+
+  // Promise.all — rejects if ANY promise rejects
+  Promise.myAll = (promises) => new Promise((resolve, reject) => {
+    let results = [], done = 0;
+    promises.forEach((p, i) =>
+      Promise.resolve(p).then(val => {
+        results[i] = val;
+        if (++done === promises.length) resolve(results);
+      }, reject)
+    );
+    if (!promises.length) resolve([]);
+  });
+
+  // Promise.allSettled — waits for all, never rejects
+  Promise.myAllSettled = (promises) => new Promise(resolve => {
+    let results = [], done = 0;
+    promises.forEach((p, i) =>
+      Promise.resolve(p).then(
+        value  => { results[i] = { status: 'fulfilled', value };  settle(); },
+        reason => { results[i] = { status: 'rejected',  reason }; settle(); }
+      )
+    );
+    function settle() { if (++done === promises.length) resolve(results); }
+    if (!promises.length) resolve([]);
+  });
+
+  // Promise.race — resolves/rejects with first settled
+  Promise.myRace = (promises) => new Promise((resolve, reject) =>
+    promises.forEach(p => Promise.resolve(p).then(resolve, reject))
+  );
+
+
+────────────────────────────────────────────────────────────────────────────────
+Q6. What is Debounce vs Throttle? Implement both from scratch with use-cases.
+    [Type: Practical + Theoretical]
+────────────────────────────────────────────────────────────────────────────────
+
+ANSWER:
+  - Debounce : delays execution until after N ms of inactivity.
+               Use case: search input, form validation.
+  - Throttle : allows execution at most once every N ms.
+               Use case: scroll, resize, button spam protection.
+
+  // Debounce
+  function debounce(fn, delay) {
+    let timer;
+    return function(...args) {
+      clearTimeout(timer);
+      timer = setTimeout(() => fn.apply(this, args), delay);
+    };
+  }
+
+  // Throttle (leading edge)
+  function throttle(fn, limit) {
+    let inThrottle;
+    return function(...args) {
+      if (!inThrottle) {
+        fn.apply(this, args);
+        inThrottle = true;
+        setTimeout(() => (inThrottle = false), limit);
+      }
+    };
+  }
+
+  // Usage
+  const onSearch = debounce(val => fetchResults(val), 300);
+  const onScroll = throttle(() => updateHeader(), 100);
+
+
+────────────────────────────────────────────────────────────────────────────────
+Q7. What is Currying? Implement a generic curry function that supports partial
+    application.
+    [Type: Practical | Level: Advanced]
+────────────────────────────────────────────────────────────────────────────────
+
+ANSWER:
+  Currying transforms f(a,b,c) into f(a)(b)(c). Enables partial application
+  and function composition.
+
+  function curry(fn) {
+    return function curried(...args) {
+      if (args.length >= fn.length) {
+        return fn.apply(this, args);
+      }
+      return function(...moreArgs) {
+        return curried.apply(this, args.concat(moreArgs));
+      };
+    };
+  }
+
+  const add = curry((a, b, c) => a + b + c);
+  add(1)(2)(3);   // 6
+  add(1, 2)(3);   // 6
+  add(1)(2, 3);   // 6
+
+  // Real-world: reusable validators
+  const hasMinLength = curry((min, str) => str.length >= min);
+  const minLength8   = hasMinLength(8);
+  minLength8('password123'); // true
+
+
+────────────────────────────────────────────────────────────────────────────────
+Q8. What are Generators? Implement an infinite ID generator and explain lazy
+    evaluation.
+    [Type: Practical | Level: Advanced]
+────────────────────────────────────────────────────────────────────────────────
+
+ANSWER:
+  Generators (function*) can pause and resume execution at yield points,
+  enabling lazy sequences.
+
+  // Infinite ID generator
+  function* idGenerator(start = 1) {
+    while (true) yield start++;
+  }
+  const gen = idGenerator();
+  gen.next().value; // 1
+  gen.next().value; // 2
+
+  // Lazy range
+  function* range(start, end, step = 1) {
+    for (let i = start; i < end; i += step) yield i;
+  }
+  [...range(0, 10, 2)]; // [0,2,4,6,8]
+
+  // Async generator (real-world pagination)
+  async function* paginate(url) {
+    let page = 1;
+    while (true) {
+      const res = await fetch(`${url}?page=${page}`).then(r => r.json());
+      if (!res.data.length) break;
+      yield res.data;
+      page++;
+    }
+  }
+
+
+────────────────────────────────────────────────────────────────────────────────
+Q9. What is the difference between == and ===? Explain Type Coercion with
+    tricky examples.
+    [Type: Tricky + Theoretical]
+────────────────────────────────────────────────────────────────────────────────
+
+ANSWER:
+  === (strict equality) checks value AND type.
+  ==  (abstract equality) performs implicit type coercion.
+
+  Tricky examples:
+  ----------------
+  0  == ''          // true  (0 == 0)
+  0  == '0'         // true
+  '' == '0'         // false
+  null == undefined // true  (special case)
+  null == 0         // false
+  false == 'false'  // false
+  false == '0'      // true
+  [] == ![]         // true  (mind-bender!)
+  // [] == false → '' == false → 0 == 0 → true
+
+  // Type coercion in arithmetic
+  '5' - 3   // 2    (string coerced to number)
+  '5' + 3   // '53' (number coerced to string!)
+  +'5'      // 5    (unary + coercion)
+  !!''      // false (falsy)
+
+  Rule of thumb: Always use ===. Use == only when explicitly comparing
+  null/undefined.
+
+
+────────────────────────────────────────────────────────────────────────────────
+Q10. What are WeakMap and WeakSet? When would you use them over Map/Set?
+     [Type: Theoretical | Level: Advanced]
+────────────────────────────────────────────────────────────────────────────────
+
+ANSWER:
+  WeakMap/WeakSet hold weak references to their object keys. If the object is
+  garbage collected, entries are auto-removed.
+
+  - Keys must be objects (not primitives)
+  - Not iterable, no size property
+  - Prevents memory leaks in long-lived apps
+
+  // Cache without memory leak
+  const cache = new WeakMap();
+  function processUser(user) {
+    if (cache.has(user)) return cache.get(user);
+    const result = heavyComputation(user);
+    cache.set(user, result);
+    return result;
+  }
+  // When 'user' object is GC'd, cache entry is too
+
+  // Private data pattern
+  const _private = new WeakMap();
+  class BankAccount {
+    constructor(balance) { _private.set(this, { balance }); }
+    getBalance() { return _private.get(this).balance; }
+  }
+
+
+────────────────────────────────────────────────────────────────────────────────
+Q11. Implement a deep clone function. What are the pitfalls of
+     JSON.parse(JSON.stringify(obj))?
+     [Type: Practical + Tricky]
+────────────────────────────────────────────────────────────────────────────────
+
+ANSWER:
+  JSON pitfalls:
+  - Loses undefined, functions, Symbol
+  - Date becomes string (not Date object)
+  - RegExp becomes {}
+  - Circular references throw an error
+
+  function deepClone(obj, seen = new WeakMap()) {
+    if (obj === null || typeof obj !== 'object') return obj;
+    if (seen.has(obj)) return seen.get(obj);  // circular ref
+
+    if (obj instanceof Date)   return new Date(obj);
+    if (obj instanceof RegExp) return new RegExp(obj);
+    if (obj instanceof Map) {
+      const m = new Map();
+      seen.set(obj, m);
+      obj.forEach((v, k) => m.set(deepClone(k, seen), deepClone(v, seen)));
+      return m;
+    }
+    const clone = Array.isArray(obj)
+      ? []
+      : Object.create(Object.getPrototypeOf(obj));
+    seen.set(obj, clone);
+    for (const key of Reflect.ownKeys(obj)) {
+      clone[key] = deepClone(obj[key], seen);
+    }
+    return clone;
+  }
+
+  Modern alternative: structuredClone(obj) — built-in, handles most types
+  except functions.
+
+
+────────────────────────────────────────────────────────────────────────────────
+Q12. Explain Hoisting. What is the Temporal Dead Zone (TDZ)?
+     [Type: Theoretical + Tricky]
+────────────────────────────────────────────────────────────────────────────────
+
+ANSWER:
+  Hoisting: Declarations are moved to the top of their scope at compile time.
+  Initialisations are NOT.
+
+  console.log(x); // undefined (not error) — var hoisted
+  var x = 5;
+
+  console.log(y); // ReferenceError: TDZ
+  let y = 5;
+
+  // Function declarations are fully hoisted
+  greet(); // "Hello" — works!
+  function greet() { console.log('Hello'); }
+
+  // Function expressions are NOT
+  sayHi(); // TypeError: sayHi is not a function
+  var sayHi = () => console.log('Hi');
+
+  TDZ: let/const are hoisted but not initialized. Accessing them before their
+  declaration line = ReferenceError.
+
+
+────────────────────────────────────────────────────────────────────────────────
+Q13. What is Memoization? Implement a generic memoize function with cache
+     invalidation.
+     [Type: Practical | Level: Advanced]
+────────────────────────────────────────────────────────────────────────────────
+
+ANSWER:
+
+  function memoize(fn, { ttl } = {}) {
+    const cache = new Map();
+    return function(...args) {
+      const key = JSON.stringify(args);
+      if (cache.has(key)) {
+        const { value, expiry } = cache.get(key);
+        if (!expiry || Date.now() < expiry) return value;
+      }
+      const value = fn.apply(this, args);
+      cache.set(key, { value, expiry: ttl ? Date.now() + ttl : null });
+      return value;
+    };
+  }
+
+  // Usage
+  const expFib = memoize((n) =>
+    n <= 1 ? n : expFib(n - 1) + expFib(n - 2)
+  );
+  expFib(40); // instant after first call
+
+  const cachedFetch = memoize(
+    url => fetch(url).then(r => r.json()),
+    { ttl: 60000 }  // 1 minute TTL
+  );
+
+
+────────────────────────────────────────────────────────────────────────────────
+Q14. What are JavaScript Memory Leaks? Name common causes and how to detect them.
+     [Type: Theoretical | Level: Advanced]
+────────────────────────────────────────────────────────────────────────────────
+
+ANSWER:
+  A memory leak is unreleased memory that the app no longer needs but
+  can't be garbage collected.
+
+  Common causes:
+  - Global variables     : accidental globals via missing var/let/const
+  - Forgotten timers     : setInterval not cleared
+  - Detached DOM nodes   : removed from DOM but still referenced in JS
+  - Closures             : holding large objects in scope unnecessarily
+  - Event listeners      : not removed when component unmounts
+
+  // Leak: setInterval keeps 'data' alive forever
+  function startPolling() {
+    const data = new Array(100000).fill('data');
+    setInterval(() => console.log(data.length), 1000);
+  }
+
+  // Fix: store id and clear
+  let timerId;
+  function start() { timerId = setInterval(poll, 1000); }
+  function stop()  { clearInterval(timerId); }
+
+  Detection: Chrome DevTools → Memory tab → Heap Snapshot /
+  Allocation instrumentation on timeline.
+
+
+────────────────────────────────────────────────────────────────────────────────
+Q15. What is Event Delegation? Why is it more performant than attaching listeners
+     to each element?
+     [Type: Practical + Theoretical]
+────────────────────────────────────────────────────────────────────────────────
+
+ANSWER:
+  Attach ONE listener on a parent and use event.target to handle children.
+  Leverages event bubbling.
+
+  // Bad: 1000 listeners for 1000 items
+  document.querySelectorAll('.item').forEach(el =>
+    el.addEventListener('click', handleClick)
+  );
+
+  // Good: 1 listener on parent
+  document.querySelector('#list').addEventListener('click', (e) => {
+    const item = e.target.closest('.item');
+    if (!item) return;
+    handleClick(item.dataset.id);
+  });
+  // Works for dynamically added elements too!
+
+  Benefits: Less memory, handles dynamic children, single teardown.
+
+
+────────────────────────────────────────────────────────────────────────────────
+Q16. What is the Proxy object? Implement a reactive object that logs all
+     property access and mutations.
+     [Type: Practical | Level: Advanced]
+────────────────────────────────────────────────────────────────────────────────
+
+ANSWER:
+
+  function reactive(target) {
+    return new Proxy(target, {
+      get(obj, prop) {
+        console.log(`GET: ${prop} = ${obj[prop]}`);
+        return typeof obj[prop] === 'object'
+          ? reactive(obj[prop])   // deep reactivity
+          : obj[prop];
+      },
+      set(obj, prop, value) {
+        console.log(`SET: ${prop} = ${value}`);
+        obj[prop] = value;
+        return true; // required by spec
+      },
+      deleteProperty(obj, prop) {
+        console.log(`DELETE: ${prop}`);
+        delete obj[prop];
+        return true;
+      }
+    });
+  }
+
+  const state = reactive({ count: 0 });
+  state.count++; // GET: count = 0 | SET: count = 1
+
+  Real-world: Vue 3 uses Proxy for reactivity.
+
+
+────────────────────────────────────────────────────────────────────────────────
+Q17. What are Web Workers? How do they communicate? When would you use them?
+     [Type: Theoretical | Level: Advanced]
+────────────────────────────────────────────────────────────────────────────────
+
+ANSWER:
+  Web Workers run JS in a background thread — no DOM access, communicate
+  via postMessage.
+
+  // main.js
+  const worker = new Worker('worker.js');
+  worker.postMessage({ data: 1_000_000 });
+  worker.onmessage = (e) => console.log('Result:', e.data);
+
+  // worker.js
+  self.onmessage = ({ data }) => {
+    const result = heavyCompute(data.data);
+    self.postMessage(result);
+  };
+
+  // Transferable objects (zero-copy for ArrayBuffer)
+  const buffer = new ArrayBuffer(1024);
+  worker.postMessage(buffer, [buffer]); // ownership transferred
+
+  Use for: image processing, data parsing, physics simulations, crypto —
+  any CPU-intensive task that would block the main thread.
+
+
+────────────────────────────────────────────────────────────────────────────────
+Q18. Implement a pub/sub (EventEmitter) system with on, off, emit, and once.
+     [Type: Practical | Level: Advanced]
+────────────────────────────────────────────────────────────────────────────────
+
+ANSWER:
+
+  class EventEmitter {
+    #events = new Map();
+
+    on(event, listener) {
+      if (!this.#events.has(event)) this.#events.set(event, new Set());
+      this.#events.get(event).add(listener);
+      return () => this.off(event, listener); // returns unsubscribe fn
+    }
+
+    off(event, listener) {
+      this.#events.get(event)?.delete(listener);
+    }
+
+    emit(event, ...args) {
+      this.#events.get(event)?.forEach(fn => fn(...args));
+    }
+
+    once(event, listener) {
+      const wrapper = (...args) => { listener(...args); this.off(event, wrapper); };
+      return this.on(event, wrapper);
+    }
+  }
+
+  const emitter = new EventEmitter();
+  const unsub = emitter.on('data', v => console.log(v));
+  emitter.emit('data', 42); // 42
+  unsub();                  // unsubscribed
+
+
+────────────────────────────────────────────────────────────────────────────────
+Q19. What is Symbol? How is it used for well-known symbols and private-like
+     properties?
+     [Type: Theoretical | Level: Advanced]
+────────────────────────────────────────────────────────────────────────────────
+
+ANSWER:
+
+  // Unique keys — no collision
+  const ID = Symbol('id');
+  const user = { [ID]: 123, name: 'Alice' };
+  user[ID];            // 123
+  Object.keys(user);   // ['name'] — Symbol not enumerable
+
+  // Well-known symbols — customize built-in behavior
+  class Range {
+    constructor(from, to) { this.from = from; this.to = to; }
+    [Symbol.iterator]() {
+      let cur = this.from;
+      const to = this.to;
+      return { next: () => cur <= to
+        ? { value: cur++, done: false }
+        : { done: true } };
+    }
+  }
+  [...new Range(1, 4)]; // [1, 2, 3, 4]
+
+  // Symbol.toPrimitive
+  class Money {
+    constructor(v) { this.v = v; }
+    [Symbol.toPrimitive](hint) {
+      return hint === 'string' ? `$${this.v}` : this.v;
+    }
+  }
+  `${new Money(50)}`; // "$50"
+
+
+────────────────────────────────────────────────────────────────────────────────
+Q20. Explain async/await error handling patterns. What happens with unhandled
+     promise rejections?
+     [Type: Practical + Theoretical]
+────────────────────────────────────────────────────────────────────────────────
+
+ANSWER:
+
+  // Pattern 1: try/catch
+  async function fetchUser(id) {
+    try {
+      const res = await fetch(`/users/${id}`);
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      return await res.json();
+    } catch (err) {
+      console.error('fetchUser failed:', err);
+      throw err; // re-throw or return fallback
+    }
+  }
+
+  // Pattern 2: Go-style tuple (no try/catch noise)
+  const to = (promise) =>
+    promise.then(data => [null, data]).catch(err => [err, null]);
+
+  const [err, user] = await to(fetchUser(1));
+  if (err) { /* handle */ }
+
+  // Unhandled rejection — Node: crashes; Browser: console warning
+  process.on('unhandledRejection', (err) => {
+    logger.error(err);
+    process.exit(1);
+  });
+
+
+────────────────────────────────────────────────────────────────────────────────
+Q21. What is the difference between Object.freeze, Object.seal, and const?
+     [Type: Tricky + Theoretical]
+────────────────────────────────────────────────────────────────────────────────
+
+ANSWER:
+  - const         : the binding can't be reassigned. Object itself is mutable.
+  - Object.seal   : can't add/delete properties, but can modify existing values.
+  - Object.freeze : can't add/delete/modify. Shallow only.
+
+  const obj = { a: 1 };
+  obj.a = 2;       // OK — const doesn't freeze
+  obj = {};        // TypeError — reassignment blocked
+
+  const sealed = Object.seal({ x: 1 });
+  sealed.x = 99;   // OK
+  sealed.y = 2;    // silently fails (TypeError in strict mode)
+
+  const frozen = Object.freeze({ x: 1, nested: { y: 2 } });
+  frozen.x = 99;          // silently fails
+  frozen.nested.y = 99;   // WORKS — freeze is shallow!
+
+  // Deep freeze
+  function deepFreeze(obj) {
+    Object.getOwnPropertyNames(obj).forEach(name => {
+      if (typeof obj[name] === 'object' && obj[name]) deepFreeze(obj[name]);
+    });
+    return Object.freeze(obj);
+  }
+
+
+────────────────────────────────────────────────────────────────────────────────
+Q22. Implement a pipe and compose function for function composition.
+     [Type: Practical | Level: Advanced]
+────────────────────────────────────────────────────────────────────────────────
+
+ANSWER:
+
+  // pipe: left-to-right execution
+  const pipe    = (...fns) => (x) => fns.reduce((v, f) => f(v), x);
+
+  // compose: right-to-left execution
+  const compose = (...fns) => (x) => fns.reduceRight((v, f) => f(v), x);
+
+  const double    = x => x * 2;
+  const addTen    = x => x + 10;
+  const stringify = x => `Value: ${x}`;
+
+  const transform = pipe(double, addTen, stringify);
+  transform(5); // "Value: 20"
+
+  // Real world: middleware pipeline
+  const processRequest = pipe(
+    authenticate,
+    authorize,
+    validate,
+    sanitize,
+    handle
+  );
+
+
+────────────────────────────────────────────────────────────────────────────────
+Q23. What is `typeof null === 'object'`? Explain this bug and how to safely
+     check for null.
+     [Type: Tricky + Theoretical]
+────────────────────────────────────────────────────────────────────────────────
+
+ANSWER:
+  This is a historical bug from JavaScript's first version. In the original
+  implementation, values were stored as type tags. null had the tag 000 (same
+  as objects), so typeof null returns 'object'. It was never fixed to maintain
+  backwards compatibility.
+
+  typeof null          // 'object' ← bug!
+  typeof undefined     // 'undefined'
+  typeof []            // 'object'
+  typeof {}            // 'object'
+  typeof function(){}  // 'function'
+
+  // Safe null check
+  value === null                             // exact null check
+  value == null                              // null OR undefined
+  Object.prototype.toString.call(null)       // '[object Null]'
+  Object.prototype.toString.call([])         // '[object Array]'
+  Object.prototype.toString.call(new Date)   // '[object Date]'
+
+
+────────────────────────────────────────────────────────────────────────────────
+Q24. What are ES2022+ features? (Private class fields, Top-level await, at(),
+     structuredClone, etc.)
+     [Type: Theoretical + Practical]
+────────────────────────────────────────────────────────────────────────────────
+
+ANSWER:
+
+  // Private class fields (ES2022)
+  class Counter {
+    #count = 0;           // truly private
+    static #instances = 0;
+    constructor() { Counter.#instances++; }
+    increment() { this.#count++; }
+    get value() { return this.#count; }
+  }
+
+  // Array.at() — negative indexing
+  [1, 2, 3].at(-1); // 3
+
+  // structuredClone — deep clone
+  const original = { date: new Date(), nested: { arr: [1, 2] } };
+  const clone = structuredClone(original);
+
+  // Object.hasOwn (replaces hasOwnProperty)
+  Object.hasOwn(user, 'name');
+
+  // Error cause
+  throw new Error('Failed', { cause: originalError });
+
+  // Top-level await (in modules)
+  const config = await loadConfig();
+  export default config;
+
+
+────────────────────────────────────────────────────────────────────────────────
+Q25. Implement a rate limiter that allows at most N requests per second using
+     the Token Bucket algorithm.
+     [Type: Practical | Level: Advanced]
+────────────────────────────────────────────────────────────────────────────────
+
+ANSWER:
+
+  class RateLimiter {
+    #tokens;
+    #maxTokens;
+    #refillRate;   // tokens per ms
+    #lastRefill;
+
+    constructor(maxPerSecond) {
+      this.#tokens     = maxPerSecond;
+      this.#maxTokens  = maxPerSecond;
+      this.#refillRate = maxPerSecond / 1000;
+      this.#lastRefill = Date.now();
+    }
+
+    #refill() {
+      const now     = Date.now();
+      const elapsed = now - this.#lastRefill;
+      this.#tokens  = Math.min(
+        this.#maxTokens,
+        this.#tokens + elapsed * this.#refillRate
+      );
+      this.#lastRefill = now;
+    }
+
+    tryConsume() {
+      this.#refill();
+      if (this.#tokens < 1) return false;
+      this.#tokens--;
+      return true;
+    }
+  }
+
+  const limiter = new RateLimiter(5); // 5 req/sec
+  if (limiter.tryConsume()) { callAPI(); }
+  else { showError('Rate limit exceeded'); }
+
+
+════════════════════════════════════════════════════════════════════════════════
+  HTML5 QUESTIONS
+════════════════════════════════════════════════════════════════════════════════
+
+────────────────────────────────────────────────────────────────────────────────
+Q26. What is Semantic HTML? Why does it matter for accessibility and SEO?
+     [Type: Theoretical]
+────────────────────────────────────────────────────────────────────────────────
+
+ANSWER:
+  Semantic HTML uses elements that convey meaning about the content, not just
+  appearance.
+
+  Non-semantic:
+  <div class="header"><div class="nav">...</div></div>
+
+  Semantic:
+  <header>
+    <nav aria-label="Main navigation">
+      <ul>
+        <li><a href="/">Home</a></li>
+      </ul>
+    </nav>
+  </header>
+  <main>
+    <article>
+      <h1>Title</h1>
+      <section>...</section>
+      <aside>Related</aside>
+    </article>
+  </main>
+  <footer><address>Contact</address></footer>
+
+  Benefits:
+  - Screen readers announce roles correctly
+  - Search engines understand page structure
+  - Code is more maintainable
+  - Accessibility is built-in
+
+
+────────────────────────────────────────────────────────────────────────────────
+Q27. Explain ARIA roles and attributes. When should you use them vs native HTML?
+     [Type: Theoretical | Level: Advanced]
+────────────────────────────────────────────────────────────────────────────────
+
+ANSWER:
+  ARIA (Accessible Rich Internet Applications) adds accessibility metadata
+  when HTML alone is insufficient.
+
+  Rule: Use native HTML first. ARIA is for when semantics can't be expressed
+  with HTML.
+
+  <!-- Native is always preferred -->
+  <button>Submit</button>   <!-- NOT <div role="button"> -->
+
+  <!-- When ARIA is necessary (custom tab component) -->
+  <div role="tablist" aria-label="Settings tabs">
+    <button
+      role="tab"
+      aria-selected="true"
+      aria-controls="panel-1"
+      id="tab-1">General</button>
+  </div>
+  <div role="tabpanel" id="panel-1" aria-labelledby="tab-1" tabindex="0">
+    ...
+  </div>
+
+  <!-- Live regions for dynamic content -->
+  <div aria-live="polite" aria-atomic="true">
+    Status updates here...
+  </div>
+
+  Key ARIA attributes: role, aria-label, aria-labelledby, aria-describedby,
+  aria-expanded, aria-hidden, aria-live, aria-required.
+
+
+────────────────────────────────────────────────────────────────────────────────
+Q28. What is the Shadow DOM? How does it achieve style encapsulation?
+     [Type: Theoretical | Level: Advanced]
+────────────────────────────────────────────────────────────────────────────────
+
+ANSWER:
+  Shadow DOM creates an isolated DOM subtree — styles inside don't leak out
+  and global styles can't pierce in (unless using CSS custom properties).
+
+  class MyCard extends HTMLElement {
+    constructor() {
+      super();
+      const shadow = this.attachShadow({ mode: 'open' });
+      shadow.innerHTML = `
+        <style>
+          :host { display: block; border: 1px solid #ccc; }
+          h2 { color: navy; }  /* scoped — won't affect page */
+        </style>
+        <h2><slot name="title"></slot></h2>
+        <slot></slot>
+      `;
+    }
+  }
+  customElements.define('my-card', MyCard);
+
+  <!-- Usage -->
+  <my-card>
+    <span slot="title">Hello</span>
+    <p>Content here</p>
+  </my-card>
+
+  CSS custom properties (variables) pierce Shadow DOM boundaries, making them
+  ideal for theming.
+
+
+────────────────────────────────────────────────────────────────────────────────
+Q29. What is the difference between defer and async script attributes?
+     When to use each?
+     [Type: Theoretical + Practical]
+────────────────────────────────────────────────────────────────────────────────
+
+ANSWER:
+
+  <!-- Normal — blocks HTML parsing -->
+  <script src="app.js"></script>
+
+  <!-- async — downloads in parallel, executes immediately when ready.
+       Order not guaranteed. May run before DOM is ready. -->
+  <script async src="analytics.js"></script>
+
+  <!-- defer — downloads in parallel, executes AFTER HTML parsed.
+       Order IS maintained. Runs before DOMContentLoaded. -->
+  <script defer src="app.js"></script>
+  <script defer src="plugin.js"></script>  <!-- runs after app.js -->
+
+  When to use:
+  - defer  : scripts that need the DOM or depend on each other
+             (frameworks, app code)
+  - async  : independent scripts (analytics, ads, tracking)
+
+  Best practice: Put scripts in <head> with defer. Avoids render-blocking
+  AND ensures DOM is ready.
+
+
+────────────────────────────────────────────────────────────────────────────────
+Q30. Explain localStorage, sessionStorage, and Cookies. What are their security
+     differences?
+     [Type: Theoretical + Practical]
+────────────────────────────────────────────────────────────────────────────────
+
+ANSWER:
+  - localStorage    : persists after tab/browser close, ~5MB, same origin only
+  - sessionStorage  : cleared on tab close, ~5MB, per-tab scope
+  - Cookies         : sent with every HTTP request, can be HttpOnly/Secure/SameSite
+
+  // localStorage / sessionStorage
+  localStorage.setItem('theme', 'dark');
+  localStorage.getItem('theme');
+  localStorage.removeItem('theme');
+
+  // Secure cookie (set server-side)
+  // Set-Cookie: token=xyz; HttpOnly; Secure; SameSite=Strict; Path=/
+
+  Security Comparison:
+  ┌──────────────────┬────────────────┬──────────────────┐
+  │ Feature          │ localStorage   │ Cookie           │
+  ├──────────────────┼────────────────┼──────────────────┤
+  │ XSS risk         │ HIGH           │ HttpOnly = safe  │
+  │ CSRF risk        │ N/A            │ SameSite = safe  │
+  │ Sent to server   │ No             │ Yes (automatic)  │
+  │ Expiry control   │ Manual JS      │ Max-Age/Expires  │
+  └──────────────────┴────────────────┴──────────────────┘
+
+  Best practice: Store JWT in HttpOnly cookie, not localStorage.
+  XSS cannot read HttpOnly cookies.
+
+
+────────────────────────────────────────────────────────────────────────────────
+Q31. What is the <picture> element? How do you implement responsive images
+     with art direction?
+     [Type: Practical + Theoretical]
+────────────────────────────────────────────────────────────────────────────────
+
+ANSWER:
+
+  <!-- srcset — same image, different sizes -->
+  <img
+    src="hero-800.jpg"
+    srcset="hero-400.jpg 400w, hero-800.jpg 800w, hero-1600.jpg 1600w"
+    sizes="(max-width: 600px) 100vw, (max-width: 1200px) 50vw, 800px"
+    alt="Hero image"
+    loading="lazy"
+    decoding="async"
+  />
+
+  <!-- picture — art direction (different crops/images per breakpoint) -->
+  <picture>
+    <!-- WebP for modern browsers, wide crop -->
+    <source
+      type="image/webp"
+      media="(min-width: 800px)"
+      srcset="hero-wide.webp"
+    />
+    <!-- Portrait crop for mobile -->
+    <source
+      media="(max-width: 799px)"
+      srcset="hero-portrait.jpg"
+    />
+    <!-- Fallback -->
+    <img src="hero-wide.jpg" alt="Hero" />
+  </picture>
+
+  Performance tip: Use loading="lazy" for below-fold images.
+  Use fetchpriority="high" for LCP images.
+
+
+────────────────────────────────────────────────────────────────────────────────
+Q32. What are Web Vitals? How does HTML structure impact LCP, CLS, and INP?
+     [Type: Theoretical | Level: Advanced]
+────────────────────────────────────────────────────────────────────────────────
+
+ANSWER:
+  - LCP (Largest Contentful Paint) : time for largest element to render.
+    Fix: preload hero image, avoid render-blocking resources.
+
+  - CLS (Cumulative Layout Shift)  : visual stability score.
+    Fix: set width/height on images, avoid DOM insertion above content.
+
+  - INP (Interaction to Next Paint): responsiveness to user input.
+    Fix: break up long tasks, use Web Workers.
+
+  <!-- LCP: Preload critical image -->
+  <link rel="preload" as="image" href="hero.webp" fetchpriority="high" />
+
+  <!-- CLS: Always define dimensions -->
+  <img src="photo.jpg" width="800" height="600" alt="..." />
+
+  <!-- CLS: Reserve space for async content -->
+  <div style="min-height: 200px">
+    <!-- ad or async widget loads here -->
+  </div>
+
+  <!-- Preconnect to critical origins -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="dns-prefetch" href="https://cdn.example.com" />
+
+
+────────────────────────────────────────────────────────────────────────────────
+Q33. Explain Content Security Policy (CSP). How do you prevent XSS using HTTP
+     headers and HTML?
+     [Type: Practical | Level: Advanced]
+────────────────────────────────────────────────────────────────────────────────
+
+ANSWER:
+  CSP is a browser security feature that restricts which resources can be
+  loaded, preventing XSS injection.
+
+  <!-- Via meta tag (limited, no report-uri, no frame-ancestors) -->
+  <meta
+    http-equiv="Content-Security-Policy"
+    content="default-src 'self'; script-src 'self' 'nonce-{random}'"
+  />
+
+  <!-- Nonce-based scripts (blocks injected scripts) -->
+  <script nonce="random123">
+    // Only this runs — even if attacker injects other script tags
+  </script>
+
+  <!-- Via HTTP header (preferred) -->
+  Content-Security-Policy:
+    default-src 'self';
+    script-src 'self' https://trusted.cdn.com 'nonce-abc123';
+    img-src 'self' data: https:;
+    frame-ancestors 'none';
+    upgrade-insecure-requests;
+
+  Also set these headers:
+  - X-Frame-Options: DENY
+  - X-Content-Type-Options: nosniff
+  - Referrer-Policy: strict-origin-when-cross-origin
+
+
+────────────────────────────────────────────────────────────────────────────────
+Q34. What are HTML5 Canvas vs SVG? When would you choose one over the other?
+     [Type: Theoretical + Practical]
+────────────────────────────────────────────────────────────────────────────────
+
+ANSWER:
+
+  SVG — vector, scalable, DOM accessible, declarative:
+  <svg width="100" height="100" viewBox="0 0 100 100">
+    <circle cx="50" cy="50" r="40"
+      fill="transparent" stroke="navy" stroke-width="4" />
+    <!-- Animatable via CSS/JS, accessible, zoomable -->
+  </svg>
+
+  Canvas — pixel-based, imperative, high performance:
+  <canvas id="c" width="600" height="400"></canvas>
+  <script>
+    const ctx = document.getElementById('c').getContext('2d');
+    ctx.beginPath();
+    ctx.arc(50, 50, 40, 0, Math.PI * 2);
+    ctx.fillStyle = '#7c3aed';
+    ctx.fill();
+  </script>
+
+  Choose SVG when:
+  - Icons, logos, charts with few elements
+  - Animations needed
+  - Accessibility is required
+  - Content must scale without quality loss
+
+  Choose Canvas when:
+  - Games or real-time visualizations
+  - 10,000+ elements (SVG DOM is slow)
+  - Image manipulation / pixel-level operations
+  - WebGL / 3D rendering
+
+
+────────────────────────────────────────────────────────────────────────────────
+Q35. What are the new HTML5 form features? Explain constraint validation API
+     and custom validity.
+     [Type: Practical + Theoretical]
+────────────────────────────────────────────────────────────────────────────────
+
+ANSWER:
+
+  <!-- HTML5 input types -->
+  <input type="email"  required />
+  <input type="url"    />
+  <input type="date"   min="2024-01-01" />
+  <input type="number" min="0" max="100" step="5" />
+  <input type="range"  />
+  <input type="color"  />
+  <input type="tel"    pattern="[0-9]{10}" />
+  <input type="search" />
+
+  // Constraint Validation API
+  const input = document.querySelector('#username');
+
+  input.validity.valid;           // boolean
+  input.validity.valueMissing;    // true if required and empty
+  input.validity.patternMismatch; // true if pattern fails
+  input.validationMessage;        // browser message
+
+  // Custom validity
+  input.addEventListener('input', () => {
+    if (input.value.includes(' ')) {
+      input.setCustomValidity('Username cannot contain spaces');
+    } else {
+      input.setCustomValidity(''); // clear error
+    }
+  });
+
+  // reportValidity() shows browser bubble
+  document.querySelector('form').addEventListener('submit', e => {
+    if (!e.target.checkValidity()) {
+      e.preventDefault();
+      e.target.reportValidity();
+    }
+  });
+
+
+================================================================================
+  END OF DOCUMENT
+  35 Questions | JavaScript (Q1-Q25) | HTML5 (Q26-Q35)
+  Level: Senior / Lead | 8+ Years Experience
+================================================================================
