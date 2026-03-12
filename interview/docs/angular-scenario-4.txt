@@ -1,0 +1,28 @@
+Angular Scenario 4: Lazy Loading Interview Scenario
+
+Scenario:
+Your Angular application has multiple modules:
+AdminModule
+UserModule
+ReportsModule
+
+Admin module should only load when admin page is accessed.
+
+Question:
+How will you implement lazy loading?
+
+Answer:
+
+app-routing.module.ts
+
+const routes:Routes = [
+ {
+   path:'admin',
+   loadChildren:()=>import('./admin/admin.module')
+   .then(m=>m.AdminModule)
+ }
+];
+
+Explanation:
+Lazy loading loads module only when route is accessed.
+This improves application performance and reduces initial bundle size.

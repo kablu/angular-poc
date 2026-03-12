@@ -1,0 +1,39 @@
+Angular Scenario 3: Component Communication Using Service + RxJS
+
+Scenario:
+In a dashboard application, multiple components must react when the user logs in.
+
+Question:
+How would you notify multiple components when login status changes?
+
+Answer:
+Use RxJS BehaviorSubject in a shared authentication service.
+
+auth.service.ts
+
+import { BehaviorSubject } from 'rxjs';
+
+export class AuthService{
+
+ private loginStatus = new BehaviorSubject<boolean>(false);
+ loginStatus$ = this.loginStatus.asObservable();
+
+ login(){
+   this.loginStatus.next(true);
+ }
+
+ logout(){
+   this.loginStatus.next(false);
+ }
+
+}
+
+Component
+
+constructor(private auth:AuthService){}
+
+ngOnInit(){
+ this.auth.loginStatus$.subscribe(status=>{
+   console.log("Login status:",status);
+ })
+}

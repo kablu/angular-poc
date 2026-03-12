@@ -1,0 +1,33 @@
+Angular Scenario 5: Angular Performance Optimization
+
+Scenario:
+You have a large list with thousands of items rendered using *ngFor.
+The application becomes slow.
+
+Question:
+How would you optimize performance?
+
+Answer:
+
+Use trackBy function.
+
+component.ts
+
+trackById(index,item){
+ return item.id;
+}
+
+template
+
+<li *ngFor="let item of items; trackBy:trackById">
+ {{item.name}}
+</li>
+
+Explanation:
+trackBy helps Angular identify list items efficiently and prevents unnecessary DOM re-rendering.
+
+Additional Optimization:
+Use ChangeDetectionStrategy.OnPush
+Lazy load modules
+Avoid heavy logic in templates
+Use pure pipes

@@ -1,0 +1,45 @@
+Angular Scenario 2: Sibling Component Communication
+
+Scenario:
+You have two sibling components inside a parent component:
+1. SenderComponent
+2. ReceiverComponent
+
+When the user clicks a button in SenderComponent, a message should appear in ReceiverComponent.
+
+Question:
+How will you transfer data between sibling components in Angular?
+
+Answer:
+Use a Shared Service with RxJS Subject.
+
+shared.service.ts
+import { Injectable } from '@angular/core';
+import { Subject } from 'rxjs';
+
+@Injectable({ providedIn: 'root' })
+export class SharedService {
+
+  private messageSource = new Subject<string>();
+  message$ = this.messageSource.asObservable();
+
+  sendMessage(msg:string){
+    this.messageSource.next(msg);
+  }
+}
+
+SenderComponent
+constructor(private shared:SharedService){}
+
+send(){
+  this.shared.sendMessage("Hello from sender");
+}
+
+ReceiverComponent
+constructor(private shared:SharedService){}
+
+ngOnInit(){
+  this.shared.message$.subscribe(msg=>{
+    console.log(msg);
+  });
+}
