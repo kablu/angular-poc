@@ -1,0 +1,1735 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>JavaScript & HTML Interview Questions — 8 Years Experience</title>
+  <style>
+    :root {
+      --bg: #0f1117;
+      --surface: #1a1d27;
+      --surface2: #22263a;
+      --accent: #7c3aed;
+      --accent2: #06b6d4;
+      --green: #10b981;
+      --yellow: #f59e0b;
+      --red: #ef4444;
+      --text: #e2e8f0;
+      --muted: #94a3b8;
+      --border: #2d3148;
+      --code-bg: #0d1117;
+      --radius: 10px;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Segoe UI', system-ui, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.7;
+    }
+
+    /* ── Header ── */
+    header {
+      background: linear-gradient(135deg, #1a1d27 0%, #0f1117 100%);
+      border-bottom: 1px solid var(--border);
+      padding: 40px 24px 32px;
+      text-align: center;
+    }
+    header h1 { font-size: 2rem; font-weight: 700; color: #fff; }
+    header h1 span { color: var(--accent2); }
+    header p  { color: var(--muted); margin-top: 8px; font-size: 0.95rem; }
+    .badges {
+      display: flex; flex-wrap: wrap; gap: 8px;
+      justify-content: center; margin-top: 16px;
+    }
+    .badge {
+      padding: 4px 14px; border-radius: 999px; font-size: 0.78rem;
+      font-weight: 600; letter-spacing: .5px;
+    }
+    .badge-js  { background: #854d0e22; color: var(--yellow); border: 1px solid #854d0e66; }
+    .badge-html{ background: #9f1239222; color: #fb7185;    border: 1px solid #9f123966; }
+    .badge-exp { background: #065f4622; color: var(--green);  border: 1px solid #065f4666; }
+
+    /* ── Filters ── */
+    .controls {
+      max-width: 980px; margin: 28px auto 0;
+      padding: 0 20px;
+      display: flex; flex-wrap: wrap; gap: 10px; align-items: center;
+    }
+    .filter-btn {
+      padding: 7px 18px; border-radius: 999px; font-size: 0.82rem;
+      font-weight: 600; cursor: pointer; border: 1.5px solid var(--border);
+      background: var(--surface); color: var(--muted); transition: all .2s;
+    }
+    .filter-btn:hover, .filter-btn.active {
+      background: var(--accent); color: #fff; border-color: var(--accent);
+    }
+    #search {
+      margin-left: auto; padding: 7px 16px; border-radius: 8px;
+      border: 1.5px solid var(--border); background: var(--surface);
+      color: var(--text); font-size: 0.85rem; min-width: 220px;
+      outline: none; transition: border .2s;
+    }
+    #search:focus { border-color: var(--accent2); }
+    .count-badge {
+      margin-left: 4px; font-size: 0.78rem; color: var(--muted);
+    }
+
+    /* ── Stats bar ── */
+    .stats {
+      max-width: 980px; margin: 20px auto 0;
+      padding: 0 20px;
+      display: flex; gap: 20px; flex-wrap: wrap;
+    }
+    .stat {
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: 8px; padding: 10px 20px; flex: 1; min-width: 120px;
+      text-align: center;
+    }
+    .stat .num  { font-size: 1.6rem; font-weight: 700; color: var(--accent2); }
+    .stat .lbl  { font-size: 0.75rem; color: var(--muted); text-transform: uppercase; letter-spacing: .5px; }
+
+    /* ── Sections ── */
+    .section {
+      max-width: 980px; margin: 32px auto 0; padding: 0 20px;
+    }
+    .section-title {
+      font-size: 1.05rem; font-weight: 700; text-transform: uppercase;
+      letter-spacing: 1px; color: var(--muted); border-bottom: 1px solid var(--border);
+      padding-bottom: 10px; margin-bottom: 16px; display: flex; align-items: center; gap: 10px;
+    }
+    .section-title .dot {
+      width: 10px; height: 10px; border-radius: 50%; display: inline-block;
+    }
+    .dot-js   { background: var(--yellow); }
+    .dot-html { background: #fb7185; }
+
+    /* ── Cards ── */
+    .card {
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: var(--radius); margin-bottom: 12px;
+      overflow: hidden; transition: border-color .2s;
+    }
+    .card:hover { border-color: var(--accent); }
+    .card-header {
+      display: flex; align-items: flex-start; gap: 14px;
+      padding: 16px 20px; cursor: pointer; user-select: none;
+    }
+    .q-num {
+      min-width: 32px; height: 32px; border-radius: 8px;
+      background: var(--surface2); display: flex; align-items: center;
+      justify-content: center; font-size: 0.78rem; font-weight: 700;
+      color: var(--accent2); flex-shrink: 0; margin-top: 2px;
+    }
+    .q-text {
+      flex: 1; font-size: 0.97rem; font-weight: 600; color: #fff;
+    }
+    .q-meta { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 6px; }
+    .tag {
+      font-size: 0.7rem; font-weight: 600; padding: 2px 9px;
+      border-radius: 999px; letter-spacing: .3px;
+    }
+    .tag-concept   { background: #312e8120; color: #a5b4fc; border: 1px solid #312e8140; }
+    .tag-practical { background: #065f4620; color: #6ee7b7; border: 1px solid #065f4640; }
+    .tag-advanced  { background: #9f123920; color: #fda4af; border: 1px solid #9f123940; }
+    .tag-tricky    { background: #78350f20; color: #fcd34d; border: 1px solid #78350f40; }
+
+    .chevron {
+      font-size: 1.1rem; color: var(--muted); transition: transform .3s;
+      flex-shrink: 0; margin-top: 2px;
+    }
+    .card.open .chevron { transform: rotate(180deg); }
+
+    /* ── Answer body ── */
+    .card-body {
+      display: none; border-top: 1px solid var(--border);
+      padding: 20px 20px 20px 66px;
+      animation: slideIn .2s ease;
+    }
+    .card.open .card-body { display: block; }
+    @keyframes slideIn {
+      from { opacity: 0; transform: translateY(-6px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    .answer-label {
+      font-size: 0.72rem; font-weight: 700; text-transform: uppercase;
+      letter-spacing: .8px; color: var(--green); margin-bottom: 10px;
+    }
+    .answer-text { font-size: 0.9rem; color: #cbd5e1; }
+    .answer-text p  { margin-bottom: 10px; }
+    .answer-text ul { margin: 8px 0 10px 18px; }
+    .answer-text li { margin-bottom: 4px; }
+    .answer-text strong { color: var(--accent2); font-weight: 600; }
+
+    /* ── Code blocks ── */
+    pre {
+      background: var(--code-bg); border: 1px solid var(--border);
+      border-radius: 8px; padding: 16px; margin: 12px 0;
+      overflow-x: auto; font-size: 0.82rem; line-height: 1.6;
+      position: relative;
+    }
+    code { font-family: 'Cascadia Code', 'Fira Code', 'Consolas', monospace; }
+    .kw  { color: #c792ea; } /* keyword */
+    .fn  { color: #82aaff; } /* function */
+    .str { color: #c3e88d; } /* string */
+    .num { color: #f78c6c; } /* number */
+    .cmt { color: #546e7a; font-style: italic; } /* comment */
+    .ret { color: #89ddff; } /* return / special */
+
+    /* ── Output box ── */
+    .output {
+      background: #0a0a0a; border: 1px solid #1e3a1e;
+      border-radius: 6px; padding: 10px 14px; margin-top: -4px;
+      font-size: 0.8rem; color: var(--green); font-family: monospace;
+    }
+    .output::before {
+      content: '▶ Output: ';
+      color: var(--muted); font-weight: 600;
+    }
+
+    /* ── Key point ── */
+    .key-point {
+      background: #1e293b; border-left: 3px solid var(--accent2);
+      border-radius: 0 6px 6px 0; padding: 10px 14px;
+      margin: 12px 0; font-size: 0.87rem; color: #94a3b8;
+    }
+    .key-point strong { color: var(--accent2); }
+
+    /* ── Footer ── */
+    footer {
+      text-align: center; padding: 40px 20px;
+      color: var(--muted); font-size: 0.8rem; border-top: 1px solid var(--border);
+      margin-top: 50px;
+    }
+
+    /* ── Hidden ── */
+    .hidden { display: none !important; }
+
+    /* ── Progress ── */
+    .progress-bar {
+      position: fixed; top: 0; left: 0; height: 3px;
+      background: linear-gradient(90deg, var(--accent), var(--accent2));
+      z-index: 999; transition: width .3s;
+    }
+
+    @media (max-width: 640px) {
+      header h1 { font-size: 1.4rem; }
+      .card-body { padding-left: 20px; }
+      #search { min-width: 100%; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="progress-bar" id="progressBar"></div>
+
+<!-- ── HEADER ─────────────────────────────────────── -->
+<header>
+  <h1>JS &amp; HTML Interview <span>Question Bank</span></h1>
+  <p>Curated for candidates with <strong style="color:#f59e0b">8+ years</strong> of frontend experience</p>
+  <div class="badges">
+    <span class="badge badge-js">JavaScript</span>
+    <span class="badge badge-html">HTML5</span>
+    <span class="badge badge-exp">Senior / Lead Level</span>
+  </div>
+</header>
+
+<!-- ── STATS ─────────────────────────────────────── -->
+<div class="stats">
+  <div class="stat"><div class="num" id="totalQ">35</div><div class="lbl">Total Questions</div></div>
+  <div class="stat"><div class="num" id="jsQ">25</div><div class="lbl">JavaScript</div></div>
+  <div class="stat"><div class="num" id="htmlQ">10</div><div class="lbl">HTML5</div></div>
+  <div class="stat"><div class="num" id="openQ">0</div><div class="lbl">Opened</div></div>
+</div>
+
+<!-- ── CONTROLS ──────────────────────────────────── -->
+<div class="controls">
+  <button class="filter-btn active" data-filter="all">All</button>
+  <button class="filter-btn" data-filter="js">JavaScript</button>
+  <button class="filter-btn" data-filter="html">HTML</button>
+  <button class="filter-btn" data-filter="concept">Theoretical</button>
+  <button class="filter-btn" data-filter="practical">Practical</button>
+  <button class="filter-btn" data-filter="tricky">Tricky</button>
+  <input id="search" type="text" placeholder="🔍  Search questions…" />
+</div>
+
+<!-- ══════════════════════════════════════════════════
+     JAVASCRIPT QUESTIONS
+════════════════════════════════════════════════════ -->
+<div class="section" id="js-section">
+  <div class="section-title"><span class="dot dot-js"></span> JavaScript Questions</div>
+
+  <!-- Q1 -->
+  <div class="card" data-cat="js" data-tags="concept">
+    <div class="card-header" onclick="toggle(this)">
+      <div class="q-num">01</div>
+      <div>
+        <div class="q-text">What is the Event Loop? Explain Call Stack, Microtask Queue, and Macrotask Queue with an example.</div>
+        <div class="q-meta">
+          <span class="tag tag-concept">Theoretical</span>
+          <span class="tag tag-advanced">Advanced</span>
+        </div>
+      </div>
+      <div class="chevron">▾</div>
+    </div>
+    <div class="card-body">
+      <div class="answer-label">✦ Answer</div>
+      <div class="answer-text">
+        <p>JavaScript is <strong>single-threaded</strong>. The Event Loop is the mechanism that allows non-blocking async operations despite that.</p>
+        <ul>
+          <li><strong>Call Stack</strong> — Executes synchronous code LIFO (last in, first out).</li>
+          <li><strong>Microtask Queue</strong> — Holds <code>Promise.then</code>, <code>queueMicrotask</code>, <code>MutationObserver</code>. Runs <em>completely empty</em> before any macrotask.</li>
+          <li><strong>Macrotask Queue</strong> — Holds <code>setTimeout</code>, <code>setInterval</code>, I/O, UI paint. One macrotask runs per loop tick.</li>
+        </ul>
+<pre><code><span class="cmt">// What is the output?</span>
+<span class="fn">console</span>.<span class="fn">log</span>(<span class="str">'1'</span>);
+
+<span class="fn">setTimeout</span>(() =&gt; <span class="fn">console</span>.<span class="fn">log</span>(<span class="str">'2'</span>), <span class="num">0</span>);
+
+<span class="kw">new</span> <span class="fn">Promise</span>(resolve =&gt; {
+  <span class="fn">console</span>.<span class="fn">log</span>(<span class="str">'3'</span>);
+  <span class="fn">resolve</span>();
+}).<span class="fn">then</span>(() =&gt; <span class="fn">console</span>.<span class="fn">log</span>(<span class="str">'4'</span>));
+
+<span class="fn">console</span>.<span class="fn">log</span>(<span class="str">'5'</span>);</code></pre>
+        <div class="output">1 → 3 → 5 → 4 → 2</div>
+        <div class="key-point"><strong>Rule:</strong> Sync → Microtasks (all) → One Macrotask → Microtasks (all) → repeat.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Q2 -->
+  <div class="card" data-cat="js" data-tags="concept practical tricky">
+    <div class="card-header" onclick="toggle(this)">
+      <div class="q-num">02</div>
+      <div>
+        <div class="q-text">Explain Closure. Write a counter factory using closure. Why does the classic loop+setTimeout bug happen and how to fix it?</div>
+        <div class="q-meta">
+          <span class="tag tag-practical">Practical</span>
+          <span class="tag tag-tricky">Tricky</span>
+        </div>
+      </div>
+      <div class="chevron">▾</div>
+    </div>
+    <div class="card-body">
+      <div class="answer-label">✦ Answer</div>
+      <div class="answer-text">
+        <p>A <strong>closure</strong> is a function that retains access to its outer lexical scope even after that scope has returned.</p>
+<pre><code><span class="cmt">// Counter factory</span>
+<span class="kw">function</span> <span class="fn">makeCounter</span>(start = <span class="num">0</span>) {
+  <span class="kw">let</span> count = start;
+  <span class="kw">return</span> {
+    increment: () =&gt; ++count,
+    decrement: () =&gt; --count,
+    value:     () =&gt; count,
+  };
+}
+<span class="kw">const</span> c = <span class="fn">makeCounter</span>(<span class="num">10</span>);
+<span class="fn">c</span>.<span class="fn">increment</span>(); <span class="cmt">// 11</span>
+<span class="fn">c</span>.<span class="fn">value</span>();     <span class="cmt">// 11</span></code></pre>
+<pre><code><span class="cmt">// Classic bug — prints 5,5,5,5,5</span>
+<span class="kw">for</span> (<span class="kw">var</span> i = <span class="num">0</span>; i &lt; <span class="num">5</span>; i++) {
+  <span class="fn">setTimeout</span>(() =&gt; <span class="fn">console</span>.<span class="fn">log</span>(i), <span class="num">100</span>);
+}
+
+<span class="cmt">// Fix 1: use let (block scope)</span>
+<span class="kw">for</span> (<span class="kw">let</span> i = <span class="num">0</span>; i &lt; <span class="num">5</span>; i++) {
+  <span class="fn">setTimeout</span>(() =&gt; <span class="fn">console</span>.<span class="fn">log</span>(i), <span class="num">100</span>);
+}
+
+<span class="cmt">// Fix 2: IIFE closure</span>
+<span class="kw">for</span> (<span class="kw">var</span> i = <span class="num">0</span>; i &lt; <span class="num">5</span>; i++) {
+  ((<span class="kw">j</span>) =&gt; <span class="fn">setTimeout</span>(() =&gt; <span class="fn">console</span>.<span class="fn">log</span>(j), <span class="num">100</span>))(i);
+}</code></pre>
+        <div class="key-point"><strong>Why?</strong> <code>var</code> is function-scoped — all callbacks share the same <code>i</code>. <code>let</code> creates a new binding per iteration.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Q3 -->
+  <div class="card" data-cat="js" data-tags="concept">
+    <div class="card-header" onclick="toggle(this)">
+      <div class="q-num">03</div>
+      <div>
+        <div class="q-text">What is Prototypal Inheritance? How does <code>Object.create</code> differ from <code>class extends</code>?</div>
+        <div class="q-meta"><span class="tag tag-concept">Theoretical</span><span class="tag tag-advanced">Advanced</span></div>
+      </div>
+      <div class="chevron">▾</div>
+    </div>
+    <div class="card-body">
+      <div class="answer-label">✦ Answer</div>
+      <div class="answer-text">
+        <p>Every JS object has an internal <code>[[Prototype]]</code> link. Property lookup walks this chain until <code>null</code>.</p>
+<pre><code><span class="cmt">// Object.create — pure prototype chain</span>
+<span class="kw">const</span> animal = {
+  speak() { <span class="kw">return</span> <span class="str">`<span class="ret">${this.name}</span> makes a sound`</span>; }
+};
+<span class="kw">const</span> dog = <span class="fn">Object</span>.<span class="fn">create</span>(animal);
+dog.name = <span class="str">'Rex'</span>;
+dog.<span class="fn">speak</span>(); <span class="cmt">// "Rex makes a sound"</span>
+
+<span class="cmt">// class syntax (syntactic sugar over prototype)</span>
+<span class="kw">class</span> <span class="fn">Animal</span> {
+  <span class="fn">constructor</span>(name) { <span class="kw">this</span>.name = name; }
+  <span class="fn">speak</span>() { <span class="kw">return</span> <span class="str">`<span class="ret">${this.name}</span> speaks`</span>; }
+}
+<span class="kw">class</span> <span class="fn">Dog</span> <span class="kw">extends</span> <span class="fn">Animal</span> {
+  <span class="fn">speak</span>() { <span class="kw">return</span> <span class="str">`<span class="ret">${this.name}</span> barks`</span>; }
+}
+<span class="fn">Dog</span>.prototype instanceof <span class="fn">Animal</span>; <span class="cmt">// false — but Dog.__proto__ === Animal</span></code></pre>
+        <div class="key-point"><strong>Key:</strong> <code>class</code> also sets up the prototype chain the same way — it's purely syntactic sugar. Unlike classical OOP, properties aren't copied; they're looked up via the chain.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Q4 -->
+  <div class="card" data-cat="js" data-tags="tricky practical">
+    <div class="card-header" onclick="toggle(this)">
+      <div class="q-num">04</div>
+      <div>
+        <div class="q-text">Explain <code>this</code> binding rules. What does <code>this</code> refer to in arrow functions vs regular functions?</div>
+        <div class="q-meta"><span class="tag tag-tricky">Tricky</span><span class="tag tag-practical">Practical</span></div>
+      </div>
+      <div class="chevron">▾</div>
+    </div>
+    <div class="card-body">
+      <div class="answer-label">✦ Answer</div>
+      <div class="answer-text">
+        <p><code>this</code> is determined at <strong>call time</strong> (except arrow functions which use <strong>lexical</strong> scope).</p>
+        <ul>
+          <li><strong>Default binding:</strong> global / <code>undefined</code> in strict mode</li>
+          <li><strong>Implicit binding:</strong> left of the dot — <code>obj.fn()</code> → <code>this = obj</code></li>
+          <li><strong>Explicit binding:</strong> <code>call</code>, <code>apply</code>, <code>bind</code></li>
+          <li><strong>new binding:</strong> newly created object</li>
+          <li><strong>Arrow:</strong> inherits <code>this</code> from enclosing lexical scope, cannot be changed</li>
+        </ul>
+<pre><code><span class="kw">const</span> obj = {
+  name: <span class="str">'JS'</span>,
+  regular() { <span class="kw">return</span> <span class="kw">this</span>.name; },        <span class="cmt">// 'JS'</span>
+  arrow:  () =&gt; <span class="kw">this</span>?.name ?? <span class="str">'undefined'</span>, <span class="cmt">// undefined — lexical this</span>
+};
+
+<span class="kw">const</span> fn = obj.regular;
+<span class="fn">fn</span>();              <span class="cmt">// undefined (default binding)</span>
+<span class="fn">fn</span>.<span class="fn">call</span>(obj);      <span class="cmt">// 'JS' (explicit)</span>
+<span class="kw">const</span> bound = <span class="fn">fn</span>.<span class="fn">bind</span>(obj);
+<span class="fn">bound</span>();           <span class="cmt">// 'JS'</span></code></pre>
+      </div>
+    </div>
+  </div>
+
+  <!-- Q5 -->
+  <div class="card" data-cat="js" data-tags="practical concept">
+    <div class="card-header" onclick="toggle(this)">
+      <div class="q-num">05</div>
+      <div>
+        <div class="q-text">Implement <code>Promise.all</code>, <code>Promise.allSettled</code>, and <code>Promise.race</code> from scratch.</div>
+        <div class="q-meta"><span class="tag tag-practical">Practical</span><span class="tag tag-advanced">Advanced</span></div>
+      </div>
+      <div class="chevron">▾</div>
+    </div>
+    <div class="card-body">
+      <div class="answer-label">✦ Answer</div>
+      <div class="answer-text">
+<pre><code><span class="cmt">// Promise.all — rejects if ANY promise rejects</span>
+<span class="fn">Promise</span>.<span class="fn">myAll</span> = (promises) =&gt; <span class="kw">new</span> <span class="fn">Promise</span>((resolve, reject) =&gt; {
+  <span class="kw">let</span> results = [], done = <span class="num">0</span>;
+  promises.<span class="fn">forEach</span>((p, i) =&gt;
+    <span class="fn">Promise</span>.<span class="fn">resolve</span>(p).<span class="fn">then</span>(val =&gt; {
+      results[i] = val;
+      <span class="kw">if</span> (++done === promises.length) <span class="fn">resolve</span>(results);
+    }, reject)
+  );
+  <span class="kw">if</span> (!promises.length) <span class="fn">resolve</span>([]);
+});
+
+<span class="cmt">// Promise.allSettled — waits for all, never rejects</span>
+<span class="fn">Promise</span>.<span class="fn">myAllSettled</span> = (promises) =&gt; <span class="kw">new</span> <span class="fn">Promise</span>(resolve =&gt; {
+  <span class="kw">let</span> results = [], done = <span class="num">0</span>;
+  promises.<span class="fn">forEach</span>((p, i) =&gt;
+    <span class="fn">Promise</span>.<span class="fn">resolve</span>(p).<span class="fn">then</span>(
+      value  =&gt; { results[i] = { status: <span class="str">'fulfilled'</span>, value };  settle(); },
+      reason =&gt; { results[i] = { status: <span class="str">'rejected'</span>,  reason }; settle(); }
+    )
+  );
+  <span class="kw">function</span> <span class="fn">settle</span>() { <span class="kw">if</span> (++done === promises.length) <span class="fn">resolve</span>(results); }
+  <span class="kw">if</span> (!promises.length) <span class="fn">resolve</span>([]);
+});
+
+<span class="cmt">// Promise.race — resolves/rejects with first settled</span>
+<span class="fn">Promise</span>.<span class="fn">myRace</span> = (promises) =&gt; <span class="kw">new</span> <span class="fn">Promise</span>((resolve, reject) =&gt;
+  promises.<span class="fn">forEach</span>(p =&gt; <span class="fn">Promise</span>.<span class="fn">resolve</span>(p).<span class="fn">then</span>(resolve, reject))
+);</code></pre>
+      </div>
+    </div>
+  </div>
+
+  <!-- Q6 -->
+  <div class="card" data-cat="js" data-tags="practical concept">
+    <div class="card-header" onclick="toggle(this)">
+      <div class="q-num">06</div>
+      <div>
+        <div class="q-text">What is Debounce vs Throttle? Implement both from scratch with use-cases.</div>
+        <div class="q-meta"><span class="tag tag-practical">Practical</span><span class="tag tag-concept">Theoretical</span></div>
+      </div>
+      <div class="chevron">▾</div>
+    </div>
+    <div class="card-body">
+      <div class="answer-label">✦ Answer</div>
+      <div class="answer-text">
+        <ul>
+          <li><strong>Debounce</strong> — delays execution until after <em>N ms of inactivity</em>. Use: search input, form validation.</li>
+          <li><strong>Throttle</strong> — allows execution <em>at most once every N ms</em>. Use: scroll, resize, button spam.</li>
+        </ul>
+<pre><code><span class="cmt">// Debounce</span>
+<span class="kw">function</span> <span class="fn">debounce</span>(fn, delay) {
+  <span class="kw">let</span> timer;
+  <span class="kw">return</span> <span class="kw">function</span>(...args) {
+    <span class="fn">clearTimeout</span>(timer);
+    timer = <span class="fn">setTimeout</span>(() =&gt; <span class="fn">fn</span>.<span class="fn">apply</span>(<span class="kw">this</span>, args), delay);
+  };
+}
+
+<span class="cmt">// Throttle (leading edge)</span>
+<span class="kw">function</span> <span class="fn">throttle</span>(fn, limit) {
+  <span class="kw">let</span> inThrottle;
+  <span class="kw">return</span> <span class="kw">function</span>(...args) {
+    <span class="kw">if</span> (!inThrottle) {
+      <span class="fn">fn</span>.<span class="fn">apply</span>(<span class="kw">this</span>, args);
+      inThrottle = <span class="kw">true</span>;
+      <span class="fn">setTimeout</span>(() =&gt; (inThrottle = <span class="kw">false</span>), limit);
+    }
+  };
+}
+
+<span class="cmt">// Usage</span>
+<span class="kw">const</span> onSearch = <span class="fn">debounce</span>(val =&gt; <span class="fn">fetchResults</span>(val), <span class="num">300</span>);
+<span class="kw">const</span> onScroll = <span class="fn">throttle</span>(() =&gt; <span class="fn">updateHeader</span>(), <span class="num">100</span>);</code></pre>
+      </div>
+    </div>
+  </div>
+
+  <!-- Q7 -->
+  <div class="card" data-cat="js" data-tags="practical concept">
+    <div class="card-header" onclick="toggle(this)">
+      <div class="q-num">07</div>
+      <div>
+        <div class="q-text">What is Currying? Implement a generic curry function that supports partial application.</div>
+        <div class="q-meta"><span class="tag tag-practical">Practical</span><span class="tag tag-advanced">Advanced</span></div>
+      </div>
+      <div class="chevron">▾</div>
+    </div>
+    <div class="card-body">
+      <div class="answer-label">✦ Answer</div>
+      <div class="answer-text">
+        <p><strong>Currying</strong> transforms <code>f(a,b,c)</code> into <code>f(a)(b)(c)</code>. Enables partial application and function composition.</p>
+<pre><code><span class="kw">function</span> <span class="fn">curry</span>(fn) {
+  <span class="kw">return function</span> <span class="fn">curried</span>(...args) {
+    <span class="kw">if</span> (args.length &gt;= fn.length) {
+      <span class="kw">return</span> <span class="fn">fn</span>.<span class="fn">apply</span>(<span class="kw">this</span>, args);
+    }
+    <span class="kw">return</span> <span class="kw">function</span>(...moreArgs) {
+      <span class="kw">return</span> <span class="fn">curried</span>.<span class="fn">apply</span>(<span class="kw">this</span>, args.<span class="fn">concat</span>(moreArgs));
+    };
+  };
+}
+
+<span class="kw">const</span> add = <span class="fn">curry</span>((a, b, c) =&gt; a + b + c);
+add(<span class="num">1</span>)(<span class="num">2</span>)(<span class="num">3</span>);  <span class="cmt">// 6</span>
+add(<span class="num">1</span>, <span class="num">2</span>)(<span class="num">3</span>);  <span class="cmt">// 6</span>
+add(<span class="num">1</span>)(<span class="num">2</span>, <span class="num">3</span>);  <span class="cmt">// 6</span>
+
+<span class="cmt">// Real-world: reusable validators</span>
+<span class="kw">const</span> hasMinLength = <span class="fn">curry</span>((min, str) =&gt; str.length &gt;= min);
+<span class="kw">const</span> minLength8 = <span class="fn">hasMinLength</span>(<span class="num">8</span>);
+<span class="fn">minLength8</span>(<span class="str">'password123'</span>); <span class="cmt">// true</span></code></pre>
+      </div>
+    </div>
+  </div>
+
+  <!-- Q8 -->
+  <div class="card" data-cat="js" data-tags="concept practical">
+    <div class="card-header" onclick="toggle(this)">
+      <div class="q-num">08</div>
+      <div>
+        <div class="q-text">What are Generators? Implement an infinite ID generator and explain lazy evaluation.</div>
+        <div class="q-meta"><span class="tag tag-practical">Practical</span><span class="tag tag-advanced">Advanced</span></div>
+      </div>
+      <div class="chevron">▾</div>
+    </div>
+    <div class="card-body">
+      <div class="answer-label">✦ Answer</div>
+      <div class="answer-text">
+        <p>Generators (<code>function*</code>) can <strong>pause and resume</strong> execution at <code>yield</code> points, enabling lazy sequences.</p>
+<pre><code><span class="cmt">// Infinite ID generator</span>
+<span class="kw">function</span>* <span class="fn">idGenerator</span>(start = <span class="num">1</span>) {
+  <span class="kw">while</span> (<span class="kw">true</span>) <span class="kw">yield</span> start++;
+}
+<span class="kw">const</span> gen = <span class="fn">idGenerator</span>();
+gen.<span class="fn">next</span>().value; <span class="cmt">// 1</span>
+gen.<span class="fn">next</span>().value; <span class="cmt">// 2</span>
+
+<span class="cmt">// Lazy range</span>
+<span class="kw">function</span>* <span class="fn">range</span>(start, end, step = <span class="num">1</span>) {
+  <span class="kw">for</span> (<span class="kw">let</span> i = start; i &lt; end; i += step) <span class="kw">yield</span> i;
+}
+[...<span class="fn">range</span>(<span class="num">0</span>, <span class="num">10</span>, <span class="num">2</span>)]; <span class="cmt">// [0,2,4,6,8]</span>
+
+<span class="cmt">// Async generator (real-world pagination)</span>
+<span class="kw">async function</span>* <span class="fn">paginate</span>(url) {
+  <span class="kw">let</span> page = <span class="num">1</span>;
+  <span class="kw">while</span> (<span class="kw">true</span>) {
+    <span class="kw">const</span> res = <span class="kw">await</span> <span class="fn">fetch</span>(<span class="str">`<span class="ret">${url}</span>?page=<span class="ret">${page}</span>`</span>).<span class="fn">then</span>(r =&gt; r.<span class="fn">json</span>());
+    <span class="kw">if</span> (!res.data.length) <span class="kw">break</span>;
+    <span class="kw">yield</span> res.data;
+    page++;
+  }
+}</code></pre>
+      </div>
+    </div>
+  </div>
+
+  <!-- Q9 -->
+  <div class="card" data-cat="js" data-tags="concept tricky">
+    <div class="card-header" onclick="toggle(this)">
+      <div class="q-num">09</div>
+      <div>
+        <div class="q-text">What is the difference between <code>==</code> and <code>===</code>? Explain Type Coercion with tricky examples.</div>
+        <div class="q-meta"><span class="tag tag-tricky">Tricky</span><span class="tag tag-concept">Theoretical</span></div>
+      </div>
+      <div class="chevron">▾</div>
+    </div>
+    <div class="card-body">
+      <div class="answer-label">✦ Answer</div>
+      <div class="answer-text">
+        <p><code>===</code> (strict equality) checks value AND type. <code>==</code> performs <strong>abstract equality</strong> with implicit coercion.</p>
+<pre><code><span class="num">0</span>  == <span class="str">''</span>          <span class="cmt">// true  (0 == 0)</span>
+<span class="num">0</span>  == <span class="str">'0'</span>         <span class="cmt">// true</span>
+<span class="str">''</span> == <span class="str">'0'</span>         <span class="cmt">// false</span>
+<span class="kw">null</span> == <span class="kw">undefined</span> <span class="cmt">// true  (special case)</span>
+<span class="kw">null</span> == <span class="num">0</span>         <span class="cmt">// false</span>
+<span class="kw">false</span> == <span class="str">'false'</span>  <span class="cmt">// false</span>
+<span class="kw">false</span> == <span class="str">'0'</span>      <span class="cmt">// true</span>
+[] == ![]          <span class="cmt">// true  (mind-bender!)</span>
+<span class="cmt">// [] == false → '' == false → 0 == 0 → true</span>
+
+<span class="cmt">// Type coercion in arithmetic</span>
+<span class="str">'5'</span> - <span class="num">3</span>   <span class="cmt">// 2   (string coerced to number)</span>
+<span class="str">'5'</span> + <span class="num">3</span>   <span class="cmt">// '53' (number coerced to string!)</span>
++<span class="str">'5'</span>      <span class="cmt">// 5   (unary + coercion)</span>
+!!<span class="str">''</span>      <span class="cmt">// false (falsy)</span></code></pre>
+        <div class="key-point"><strong>Rule of thumb:</strong> Always use <code>===</code>. Use <code>==</code> only when explicitly comparing <code>null</code>/<code>undefined</code>.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Q10 -->
+  <div class="card" data-cat="js" data-tags="concept practical">
+    <div class="card-header" onclick="toggle(this)">
+      <div class="q-num">10</div>
+      <div>
+        <div class="q-text">What are WeakMap and WeakSet? When would you use them over Map/Set?</div>
+        <div class="q-meta"><span class="tag tag-concept">Theoretical</span><span class="tag tag-advanced">Advanced</span></div>
+      </div>
+      <div class="chevron">▾</div>
+    </div>
+    <div class="card-body">
+      <div class="answer-label">✦ Answer</div>
+      <div class="answer-text">
+        <p><strong>WeakMap/WeakSet</strong> hold <em>weak references</em> to their object keys. If the object is garbage collected, entries are auto-removed.</p>
+        <ul>
+          <li>Keys must be <strong>objects</strong> (not primitives)</li>
+          <li>Not iterable, no <code>size</code> property</li>
+          <li>Prevents memory leaks in long-lived apps</li>
+        </ul>
+<pre><code><span class="cmt">// Cache without memory leak</span>
+<span class="kw">const</span> cache = <span class="kw">new</span> <span class="fn">WeakMap</span>();
+
+<span class="kw">function</span> <span class="fn">processUser</span>(user) {
+  <span class="kw">if</span> (cache.<span class="fn">has</span>(user)) <span class="kw">return</span> cache.<span class="fn">get</span>(user);
+  <span class="kw">const</span> result = <span class="fn">heavyComputation</span>(user);
+  cache.<span class="fn">set</span>(user, result);
+  <span class="kw">return</span> result;
+}
+<span class="cmt">// When 'user' object is GC'd, cache entry is too</span>
+
+<span class="cmt">// Private data pattern</span>
+<span class="kw">const</span> _private = <span class="kw">new</span> <span class="fn">WeakMap</span>();
+<span class="kw">class</span> <span class="fn">BankAccount</span> {
+  <span class="fn">constructor</span>(balance) { _private.<span class="fn">set</span>(<span class="kw">this</span>, { balance }); }
+  <span class="fn">getBalance</span>() { <span class="kw">return</span> _private.<span class="fn">get</span>(<span class="kw">this</span>).balance; }
+}</code></pre>
+      </div>
+    </div>
+  </div>
+
+  <!-- Q11 -->
+  <div class="card" data-cat="js" data-tags="practical concept">
+    <div class="card-header" onclick="toggle(this)">
+      <div class="q-num">11</div>
+      <div>
+        <div class="q-text">Implement a deep clone function. What are the pitfalls of <code>JSON.parse(JSON.stringify(obj))</code>?</div>
+        <div class="q-meta"><span class="tag tag-practical">Practical</span><span class="tag tag-tricky">Tricky</span></div>
+      </div>
+      <div class="chevron">▾</div>
+    </div>
+    <div class="card-body">
+      <div class="answer-label">✦ Answer</div>
+      <div class="answer-text">
+        <p><strong>JSON pitfalls:</strong> loses <code>undefined</code>, functions, <code>Symbol</code>, <code>Date</code> (becomes string), <code>RegExp</code>, circular refs throw.</p>
+<pre><code><span class="kw">function</span> <span class="fn">deepClone</span>(obj, seen = <span class="kw">new</span> <span class="fn">WeakMap</span>()) {
+  <span class="kw">if</span> (obj === <span class="kw">null</span> || <span class="kw">typeof</span> obj !== <span class="str">'object'</span>) <span class="kw">return</span> obj;
+  <span class="kw">if</span> (seen.<span class="fn">has</span>(obj)) <span class="kw">return</span> seen.<span class="fn">get</span>(obj);  <span class="cmt">// circular ref</span>
+
+  <span class="kw">if</span> (obj <span class="kw">instanceof</span> <span class="fn">Date</span>)   <span class="kw">return new</span> <span class="fn">Date</span>(obj);
+  <span class="kw">if</span> (obj <span class="kw">instanceof</span> <span class="fn">RegExp</span>) <span class="kw">return new</span> <span class="fn">RegExp</span>(obj);
+  <span class="kw">if</span> (obj <span class="kw">instanceof</span> <span class="fn">Map</span>) {
+    <span class="kw">const</span> m = <span class="kw">new</span> <span class="fn">Map</span>();
+    seen.<span class="fn">set</span>(obj, m);
+    obj.<span class="fn">forEach</span>((v, k) =&gt; m.<span class="fn">set</span>(<span class="fn">deepClone</span>(k, seen), <span class="fn">deepClone</span>(v, seen)));
+    <span class="kw">return</span> m;
+  }
+  <span class="kw">const</span> clone = <span class="fn">Array</span>.<span class="fn">isArray</span>(obj) ? [] : <span class="fn">Object</span>.<span class="fn">create</span>(<span class="fn">Object</span>.<span class="fn">getPrototypeOf</span>(obj));
+  seen.<span class="fn">set</span>(obj, clone);
+  <span class="kw">for</span> (<span class="kw">const</span> key <span class="kw">of</span> <span class="fn">Reflect</span>.<span class="fn">ownKeys</span>(obj)) {
+    clone[key] = <span class="fn">deepClone</span>(obj[key], seen);
+  }
+  <span class="kw">return</span> clone;
+}</code></pre>
+        <div class="key-point"><strong>Modern alternative:</strong> <code>structuredClone(obj)</code> — built-in, handles most types except functions.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Q12 -->
+  <div class="card" data-cat="js" data-tags="concept">
+    <div class="card-header" onclick="toggle(this)">
+      <div class="q-num">12</div>
+      <div>
+        <div class="q-text">Explain Hoisting. What is the Temporal Dead Zone (TDZ)?</div>
+        <div class="q-meta"><span class="tag tag-concept">Theoretical</span><span class="tag tag-tricky">Tricky</span></div>
+      </div>
+      <div class="chevron">▾</div>
+    </div>
+    <div class="card-body">
+      <div class="answer-label">✦ Answer</div>
+      <div class="answer-text">
+        <p><strong>Hoisting</strong>: Declarations are moved to the top of their scope at compile time. Initialisations are NOT.</p>
+<pre><code><span class="fn">console</span>.<span class="fn">log</span>(x); <span class="cmt">// undefined (not error) — var hoisted</span>
+<span class="kw">var</span> x = <span class="num">5</span>;
+
+<span class="fn">console</span>.<span class="fn">log</span>(y); <span class="cmt">// ReferenceError: TDZ</span>
+<span class="kw">let</span> y = <span class="num">5</span>;
+
+<span class="cmt">// Function declarations are fully hoisted</span>
+<span class="fn">greet</span>(); <span class="cmt">// "Hello" — works!</span>
+<span class="kw">function</span> <span class="fn">greet</span>() { <span class="fn">console</span>.<span class="fn">log</span>(<span class="str">'Hello'</span>); }
+
+<span class="cmt">// Function expressions are NOT</span>
+<span class="fn">sayHi</span>(); <span class="cmt">// TypeError: sayHi is not a function</span>
+<span class="kw">var</span> sayHi = () =&gt; <span class="fn">console</span>.<span class="fn">log</span>(<span class="str">'Hi'</span>);</code></pre>
+        <div class="key-point"><strong>TDZ:</strong> <code>let</code>/<code>const</code> are hoisted but not initialized. Accessing them before their line = <code>ReferenceError</code>.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Q13 -->
+  <div class="card" data-cat="js" data-tags="practical concept">
+    <div class="card-header" onclick="toggle(this)">
+      <div class="q-num">13</div>
+      <div>
+        <div class="q-text">What is Memoization? Implement a generic memoize function with cache invalidation.</div>
+        <div class="q-meta"><span class="tag tag-practical">Practical</span><span class="tag tag-advanced">Advanced</span></div>
+      </div>
+      <div class="chevron">▾</div>
+    </div>
+    <div class="card-body">
+      <div class="answer-label">✦ Answer</div>
+      <div class="answer-text">
+<pre><code><span class="kw">function</span> <span class="fn">memoize</span>(fn, { ttl } = {}) {
+  <span class="kw">const</span> cache = <span class="kw">new</span> <span class="fn">Map</span>();
+  <span class="kw">return</span> <span class="kw">function</span>(...args) {
+    <span class="kw">const</span> key = <span class="fn">JSON</span>.<span class="fn">stringify</span>(args);
+    <span class="kw">if</span> (cache.<span class="fn">has</span>(key)) {
+      <span class="kw">const</span> { value, expiry } = cache.<span class="fn">get</span>(key);
+      <span class="kw">if</span> (!expiry || <span class="fn">Date</span>.<span class="fn">now</span>() &lt; expiry) <span class="kw">return</span> value;
+    }
+    <span class="kw">const</span> value = <span class="fn">fn</span>.<span class="fn">apply</span>(<span class="kw">this</span>, args);
+    cache.<span class="fn">set</span>(key, { value, expiry: ttl ? <span class="fn">Date</span>.<span class="fn">now</span>() + ttl : <span class="kw">null</span> });
+    <span class="kw">return</span> value;
+  };
+}
+
+<span class="cmt">// Usage</span>
+<span class="kw">const</span> expFib = <span class="fn">memoize</span>((n) =&gt;
+  n &lt;= <span class="num">1</span> ? n : <span class="fn">expFib</span>(n - <span class="num">1</span>) + <span class="fn">expFib</span>(n - <span class="num">2</span>)
+);
+<span class="fn">expFib</span>(<span class="num">40</span>); <span class="cmt">// instant after first call</span>
+
+<span class="kw">const</span> cachedFetch = <span class="fn">memoize</span>(url =&gt; <span class="fn">fetch</span>(url).<span class="fn">then</span>(r =&gt; r.<span class="fn">json</span>()), { ttl: <span class="num">60000</span> });</code></pre>
+      </div>
+    </div>
+  </div>
+
+  <!-- Q14 -->
+  <div class="card" data-cat="js" data-tags="concept">
+    <div class="card-header" onclick="toggle(this)">
+      <div class="q-num">14</div>
+      <div>
+        <div class="q-text">What are JavaScript Memory Leaks? Name common causes and how to detect them.</div>
+        <div class="q-meta"><span class="tag tag-concept">Theoretical</span><span class="tag tag-advanced">Advanced</span></div>
+      </div>
+      <div class="chevron">▾</div>
+    </div>
+    <div class="card-body">
+      <div class="answer-label">✦ Answer</div>
+      <div class="answer-text">
+        <p>A memory leak is unreleased memory that the app no longer needs but can't be GC'd.</p>
+        <ul>
+          <li><strong>Global variables</strong> — accidental globals via missing <code>var/let/const</code></li>
+          <li><strong>Forgotten timers/intervals</strong> — <code>setInterval</code> not cleared</li>
+          <li><strong>Detached DOM nodes</strong> — removed from DOM but referenced in JS</li>
+          <li><strong>Closures</strong> — holding large objects in scope unnecessarily</li>
+          <li><strong>Event listeners</strong> — not removed when component unmounts</li>
+        </ul>
+<pre><code><span class="cmt">// Leak: setInterval keeps 'data' alive</span>
+<span class="kw">function</span> <span class="fn">startPolling</span>() {
+  <span class="kw">const</span> data = <span class="kw">new</span> <span class="fn">Array</span>(<span class="num">100000</span>).<span class="fn">fill</span>(<span class="str">'data'</span>);
+  <span class="fn">setInterval</span>(() =&gt; <span class="fn">console</span>.<span class="fn">log</span>(data.length), <span class="num">1000</span>);
+  <span class="cmt">// Never clears — data never GC'd</span>
+}
+
+<span class="cmt">// Fix: store id and clear</span>
+<span class="kw">let</span> timerId;
+<span class="kw">function</span> <span class="fn">start</span>() { timerId = <span class="fn">setInterval</span>(poll, <span class="num">1000</span>); }
+<span class="kw">function</span> <span class="fn">stop</span>()  { <span class="fn">clearInterval</span>(timerId); }</code></pre>
+        <div class="key-point"><strong>Detection:</strong> Chrome DevTools → Memory tab → Heap Snapshot / Allocation instrumentation on timeline.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Q15 -->
+  <div class="card" data-cat="js" data-tags="practical concept">
+    <div class="card-header" onclick="toggle(this)">
+      <div class="q-num">15</div>
+      <div>
+        <div class="q-text">What is Event Delegation? Why is it more performant than attaching listeners to each element?</div>
+        <div class="q-meta"><span class="tag tag-practical">Practical</span><span class="tag tag-concept">Theoretical</span></div>
+      </div>
+      <div class="chevron">▾</div>
+    </div>
+    <div class="card-body">
+      <div class="answer-label">✦ Answer</div>
+      <div class="answer-text">
+        <p>Attach ONE listener on a parent and use <code>event.target</code> to handle children — leverages <strong>event bubbling</strong>.</p>
+<pre><code><span class="cmt">// Bad: 1000 listeners for 1000 items</span>
+document.<span class="fn">querySelectorAll</span>(<span class="str">'.item'</span>).<span class="fn">forEach</span>(el =&gt;
+  el.<span class="fn">addEventListener</span>(<span class="str">'click'</span>, handleClick)
+);
+
+<span class="cmt">// Good: 1 listener on parent</span>
+document.<span class="fn">querySelector</span>(<span class="str">'#list'</span>).<span class="fn">addEventListener</span>(<span class="str">'click'</span>, (e) =&gt; {
+  <span class="kw">const</span> item = e.target.<span class="fn">closest</span>(<span class="str">'.item'</span>);
+  <span class="kw">if</span> (!item) <span class="kw">return</span>;
+  <span class="fn">handleClick</span>(item.dataset.id);
+});
+<span class="cmt">// Works for dynamically added elements too!</span></code></pre>
+        <div class="key-point"><strong>Benefits:</strong> Less memory, handles dynamic children, single teardown.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Q16 -->
+  <div class="card" data-cat="js" data-tags="concept practical">
+    <div class="card-header" onclick="toggle(this)">
+      <div class="q-num">16</div>
+      <div>
+        <div class="q-text">What is the Proxy object? Implement a reactive object that logs all property access and mutations.</div>
+        <div class="q-meta"><span class="tag tag-practical">Practical</span><span class="tag tag-advanced">Advanced</span></div>
+      </div>
+      <div class="chevron">▾</div>
+    </div>
+    <div class="card-body">
+      <div class="answer-label">✦ Answer</div>
+      <div class="answer-text">
+<pre><code><span class="kw">function</span> <span class="fn">reactive</span>(target) {
+  <span class="kw">return new</span> <span class="fn">Proxy</span>(target, {
+    <span class="fn">get</span>(obj, prop) {
+      <span class="fn">console</span>.<span class="fn">log</span>(<span class="str">`GET: <span class="ret">${prop}</span> = <span class="ret">${obj[prop]}</span>`</span>);
+      <span class="kw">return</span> <span class="kw">typeof</span> obj[prop] === <span class="str">'object'</span>
+        ? <span class="fn">reactive</span>(obj[prop])   <span class="cmt">// deep reactivity</span>
+        : obj[prop];
+    },
+    <span class="fn">set</span>(obj, prop, value) {
+      <span class="fn">console</span>.<span class="fn">log</span>(<span class="str">`SET: <span class="ret">${prop}</span> = <span class="ret">${value}</span>`</span>);
+      obj[prop] = value;
+      <span class="kw">return true</span>; <span class="cmt">// required by spec</span>
+    },
+    <span class="fn">deleteProperty</span>(obj, prop) {
+      <span class="fn">console</span>.<span class="fn">log</span>(<span class="str">`DELETE: <span class="ret">${prop}</span>`</span>);
+      <span class="kw">delete</span> obj[prop];
+      <span class="kw">return true</span>;
+    }
+  });
+}
+<span class="kw">const</span> state = <span class="fn">reactive</span>({ count: <span class="num">0</span> });
+state.count++;    <span class="cmt">// GET: count = 0 | SET: count = 1</span></code></pre>
+        <div class="key-point"><strong>Real-world:</strong> Vue 3 uses Proxy for reactivity. Angular uses zone.js + change detection.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Q17 -->
+  <div class="card" data-cat="js" data-tags="concept">
+    <div class="card-header" onclick="toggle(this)">
+      <div class="q-num">17</div>
+      <div>
+        <div class="q-text">What are Web Workers? How do they communicate? When would you use them?</div>
+        <div class="q-meta"><span class="tag tag-concept">Theoretical</span><span class="tag tag-advanced">Advanced</span></div>
+      </div>
+      <div class="chevron">▾</div>
+    </div>
+    <div class="card-body">
+      <div class="answer-label">✦ Answer</div>
+      <div class="answer-text">
+        <p>Web Workers run JS in a <strong>background thread</strong> — no DOM access, communicate via <code>postMessage</code>.</p>
+<pre><code><span class="cmt">// main.js</span>
+<span class="kw">const</span> worker = <span class="kw">new</span> <span class="fn">Worker</span>(<span class="str">'worker.js'</span>);
+worker.<span class="fn">postMessage</span>({ data: <span class="num">1_000_000</span> });
+worker.<span class="fn">onmessage</span> = (e) =&gt; <span class="fn">console</span>.<span class="fn">log</span>(<span class="str">'Result:'</span>, e.data);
+
+<span class="cmt">// worker.js</span>
+<span class="fn">self</span>.<span class="fn">onmessage</span> = ({ data }) =&gt; {
+  <span class="kw">const</span> result = <span class="fn">heavyCompute</span>(data.data);
+  <span class="fn">self</span>.<span class="fn">postMessage</span>(result);
+};
+
+<span class="cmt">// Transferable objects (zero-copy for ArrayBuffer)</span>
+<span class="kw">const</span> buffer = <span class="kw">new</span> <span class="fn">ArrayBuffer</span>(<span class="num">1024</span>);
+worker.<span class="fn">postMessage</span>(buffer, [buffer]); <span class="cmt">// ownership transferred</span></code></pre>
+        <div class="key-point"><strong>Use for:</strong> image processing, data parsing, physics simulations, crypto — any CPU-intensive task that would block the main thread.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Q18 -->
+  <div class="card" data-cat="js" data-tags="tricky practical">
+    <div class="card-header" onclick="toggle(this)">
+      <div class="q-num">18</div>
+      <div>
+        <div class="q-text">Implement a pub/sub (EventEmitter) system with <code>on</code>, <code>off</code>, <code>emit</code>, and <code>once</code>.</div>
+        <div class="q-meta"><span class="tag tag-practical">Practical</span><span class="tag tag-advanced">Advanced</span></div>
+      </div>
+      <div class="chevron">▾</div>
+    </div>
+    <div class="card-body">
+      <div class="answer-label">✦ Answer</div>
+      <div class="answer-text">
+<pre><code><span class="kw">class</span> <span class="fn">EventEmitter</span> {
+  #events = <span class="kw">new</span> <span class="fn">Map</span>();
+
+  <span class="fn">on</span>(event, listener) {
+    <span class="kw">if</span> (!<span class="kw">this</span>.#events.<span class="fn">has</span>(event)) <span class="kw">this</span>.#events.<span class="fn">set</span>(event, <span class="kw">new</span> <span class="fn">Set</span>());
+    <span class="kw">this</span>.#events.<span class="fn">get</span>(event).<span class="fn">add</span>(listener);
+    <span class="kw">return</span> () =&gt; <span class="kw">this</span>.<span class="fn">off</span>(event, listener); <span class="cmt">// unsubscribe fn</span>
+  }
+
+  <span class="fn">off</span>(event, listener) {
+    <span class="kw">this</span>.#events.<span class="fn">get</span>(event)?.<span class="fn">delete</span>(listener);
+  }
+
+  <span class="fn">emit</span>(event, ...args) {
+    <span class="kw">this</span>.#events.<span class="fn">get</span>(event)?.<span class="fn">forEach</span>(fn =&gt; <span class="fn">fn</span>(...args));
+  }
+
+  <span class="fn">once</span>(event, listener) {
+    <span class="kw">const</span> wrapper = (...args) =&gt; { <span class="fn">listener</span>(...args); <span class="kw">this</span>.<span class="fn">off</span>(event, wrapper); };
+    <span class="kw">return this</span>.<span class="fn">on</span>(event, wrapper);
+  }
+}
+
+<span class="kw">const</span> emitter = <span class="kw">new</span> <span class="fn">EventEmitter</span>();
+<span class="kw">const</span> unsub = emitter.<span class="fn">on</span>(<span class="str">'data'</span>, v =&gt; <span class="fn">console</span>.<span class="fn">log</span>(v));
+emitter.<span class="fn">emit</span>(<span class="str">'data'</span>, <span class="num">42</span>); <span class="cmt">// 42</span>
+<span class="fn">unsub</span>();                 <span class="cmt">// unsubscribed</span></code></pre>
+      </div>
+    </div>
+  </div>
+
+  <!-- Q19 -->
+  <div class="card" data-cat="js" data-tags="concept tricky">
+    <div class="card-header" onclick="toggle(this)">
+      <div class="q-num">19</div>
+      <div>
+        <div class="q-text">What is <code>Symbol</code>? How is it used for well-known symbols and private-like properties?</div>
+        <div class="q-meta"><span class="tag tag-concept">Theoretical</span><span class="tag tag-advanced">Advanced</span></div>
+      </div>
+      <div class="chevron">▾</div>
+    </div>
+    <div class="card-body">
+      <div class="answer-label">✦ Answer</div>
+      <div class="answer-text">
+<pre><code><span class="cmt">// Unique keys — no collision</span>
+<span class="kw">const</span> ID = <span class="fn">Symbol</span>(<span class="str">'id'</span>);
+<span class="kw">const</span> user = { [ID]: <span class="num">123</span>, name: <span class="str">'Alice'</span> };
+user[ID];               <span class="cmt">// 123</span>
+<span class="fn">Object</span>.<span class="fn">keys</span>(user);     <span class="cmt">// ['name'] — Symbol not enumerable</span>
+
+<span class="cmt">// Well-known symbols — customize built-in behavior</span>
+<span class="kw">class</span> <span class="fn">Range</span> {
+  <span class="fn">constructor</span>(from, to) { <span class="kw">this</span>.from = from; <span class="kw">this</span>.to = to; }
+  [<span class="fn">Symbol</span>.iterator]() {
+    <span class="kw">let</span> cur = <span class="kw">this</span>.from;
+    <span class="kw">const</span> to = <span class="kw">this</span>.to;
+    <span class="kw">return</span> { next: () =&gt; cur &lt;= to
+      ? { value: cur++, done: <span class="kw">false</span> }
+      : { done: <span class="kw">true</span> } };
+  }
+}
+[...<span class="kw">new</span> <span class="fn">Range</span>(<span class="num">1</span>, <span class="num">4</span>)]; <span class="cmt">// [1, 2, 3, 4]</span>
+
+<span class="cmt">// Symbol.toPrimitive</span>
+<span class="kw">class</span> <span class="fn">Money</span> {
+  <span class="fn">constructor</span>(v) { <span class="kw">this</span>.v = v; }
+  [<span class="fn">Symbol</span>.toPrimitive](hint) {
+    <span class="kw">return</span> hint === <span class="str">'string'</span> ? <span class="str">`$<span class="ret">${this.v}</span>`</span> : <span class="kw">this</span>.v;
+  }
+}
+<span class="str">`<span class="ret">${new Money(50)}</span>`</span>;  <span class="cmt">// "$50"</span></code></pre>
+      </div>
+    </div>
+  </div>
+
+  <!-- Q20 -->
+  <div class="card" data-cat="js" data-tags="practical concept">
+    <div class="card-header" onclick="toggle(this)">
+      <div class="q-num">20</div>
+      <div>
+        <div class="q-text">Explain <code>async/await</code> error handling patterns. What happens with unhandled promise rejections?</div>
+        <div class="q-meta"><span class="tag tag-practical">Practical</span><span class="tag tag-concept">Theoretical</span></div>
+      </div>
+      <div class="chevron">▾</div>
+    </div>
+    <div class="card-body">
+      <div class="answer-label">✦ Answer</div>
+      <div class="answer-text">
+<pre><code><span class="cmt">// Pattern 1: try/catch</span>
+<span class="kw">async function</span> <span class="fn">fetchUser</span>(id) {
+  <span class="kw">try</span> {
+    <span class="kw">const</span> res = <span class="kw">await</span> <span class="fn">fetch</span>(<span class="str">`/users/<span class="ret">${id}</span>`</span>);
+    <span class="kw">if</span> (!res.ok) <span class="kw">throw new</span> <span class="fn">Error</span>(<span class="str">`HTTP <span class="ret">${res.status}</span>`</span>);
+    <span class="kw">return await</span> res.<span class="fn">json</span>();
+  } <span class="kw">catch</span> (err) {
+    <span class="fn">console</span>.<span class="fn">error</span>(<span class="str">'fetchUser failed:'</span>, err);
+    <span class="kw">throw</span> err; <span class="cmt">// re-throw or return fallback</span>
+  }
+}
+
+<span class="cmt">// Pattern 2: Go-style tuple (no try/catch noise)</span>
+<span class="kw">const</span> to = (promise) =&gt;
+  promise.<span class="fn">then</span>(data =&gt; [<span class="kw">null</span>, data]).<span class="fn">catch</span>(err =&gt; [err, <span class="kw">null</span>]);
+
+<span class="kw">const</span> [err, user] = <span class="kw">await</span> <span class="fn">to</span>(<span class="fn">fetchUser</span>(<span class="num">1</span>));
+<span class="kw">if</span> (err) { <span class="cmt">/* handle */</span> }
+
+<span class="cmt">// Unhandled rejection — Node: crashes; Browser: console warning</span>
+process.<span class="fn">on</span>(<span class="str">'unhandledRejection'</span>, (err) =&gt; {
+  <span class="fn">logger</span>.<span class="fn">error</span>(err);
+  process.<span class="fn">exit</span>(<span class="num">1</span>);
+});</code></pre>
+      </div>
+    </div>
+  </div>
+
+  <!-- Q21 -->
+  <div class="card" data-cat="js" data-tags="tricky practical">
+    <div class="card-header" onclick="toggle(this)">
+      <div class="q-num">21</div>
+      <div>
+        <div class="q-text">What is the difference between <code>Object.freeze</code>, <code>Object.seal</code>, and <code>const</code>?</div>
+        <div class="q-meta"><span class="tag tag-tricky">Tricky</span><span class="tag tag-concept">Theoretical</span></div>
+      </div>
+      <div class="chevron">▾</div>
+    </div>
+    <div class="card-body">
+      <div class="answer-label">✦ Answer</div>
+      <div class="answer-text">
+        <ul>
+          <li><strong>const</strong> — the <em>binding</em> can't be reassigned. The object itself is still mutable.</li>
+          <li><strong>Object.seal</strong> — can't add/delete properties, but can <em>modify existing values</em>.</li>
+          <li><strong>Object.freeze</strong> — can't add/delete/modify properties. Shallow only.</li>
+        </ul>
+<pre><code><span class="kw">const</span> obj = { a: <span class="num">1</span> };
+obj.a = <span class="num">2</span>;        <span class="cmt">// OK — const doesn't freeze</span>
+obj = {};          <span class="cmt">// TypeError — reassignment blocked</span>
+
+<span class="kw">const</span> sealed = <span class="fn">Object</span>.<span class="fn">seal</span>({ x: <span class="num">1</span> });
+sealed.x = <span class="num">99</span>;   <span class="cmt">// OK</span>
+sealed.y = <span class="num">2</span>;    <span class="cmt">// silently fails (TypeError in strict)</span>
+
+<span class="kw">const</span> frozen = <span class="fn">Object</span>.<span class="fn">freeze</span>({ x: <span class="num">1</span>, nested: { y: <span class="num">2</span> } });
+frozen.x = <span class="num">99</span>;          <span class="cmt">// silently fails</span>
+frozen.nested.y = <span class="num">99</span>;   <span class="cmt">// WORKS — freeze is shallow!</span>
+
+<span class="cmt">// Deep freeze</span>
+<span class="kw">function</span> <span class="fn">deepFreeze</span>(obj) {
+  <span class="fn">Object</span>.<span class="fn">getOwnPropertyNames</span>(obj).<span class="fn">forEach</span>(name =&gt; {
+    <span class="kw">if</span> (<span class="kw">typeof</span> obj[name] === <span class="str">'object'</span> && obj[name]) <span class="fn">deepFreeze</span>(obj[name]);
+  });
+  <span class="kw">return</span> <span class="fn">Object</span>.<span class="fn">freeze</span>(obj);
+}</code></pre>
+      </div>
+    </div>
+  </div>
+
+  <!-- Q22 -->
+  <div class="card" data-cat="js" data-tags="practical concept">
+    <div class="card-header" onclick="toggle(this)">
+      <div class="q-num">22</div>
+      <div>
+        <div class="q-text">Implement a <code>pipe</code> and <code>compose</code> function for function composition.</div>
+        <div class="q-meta"><span class="tag tag-practical">Practical</span><span class="tag tag-advanced">Advanced</span></div>
+      </div>
+      <div class="chevron">▾</div>
+    </div>
+    <div class="card-body">
+      <div class="answer-label">✦ Answer</div>
+      <div class="answer-text">
+<pre><code><span class="cmt">// pipe: left-to-right execution</span>
+<span class="kw">const</span> pipe = (...fns) =&gt; (x) =&gt; fns.<span class="fn">reduce</span>((v, f) =&gt; <span class="fn">f</span>(v), x);
+
+<span class="cmt">// compose: right-to-left execution</span>
+<span class="kw">const</span> compose = (...fns) =&gt; (x) =&gt; fns.<span class="fn">reduceRight</span>((v, f) =&gt; <span class="fn">f</span>(v), x);
+
+<span class="kw">const</span> double    = x =&gt; x * <span class="num">2</span>;
+<span class="kw">const</span> addTen    = x =&gt; x + <span class="num">10</span>;
+<span class="kw">const</span> stringify = x =&gt; <span class="str">`Value: <span class="ret">${x}</span>`</span>;
+
+<span class="kw">const</span> transform = <span class="fn">pipe</span>(double, addTen, stringify);
+<span class="fn">transform</span>(<span class="num">5</span>); <span class="cmt">// "Value: 20"</span>
+
+<span class="cmt">// Real world: middleware pipeline</span>
+<span class="kw">const</span> processRequest = <span class="fn">pipe</span>(
+  authenticate,
+  authorize,
+  validate,
+  sanitize,
+  handle
+);</code></pre>
+      </div>
+    </div>
+  </div>
+
+  <!-- Q23 -->
+  <div class="card" data-cat="js" data-tags="tricky concept">
+    <div class="card-header" onclick="toggle(this)">
+      <div class="q-num">23</div>
+      <div>
+        <div class="q-text">What is <code>typeof null === 'object'</code>? Explain this bug and how to safely check for null.</div>
+        <div class="q-meta"><span class="tag tag-tricky">Tricky</span><span class="tag tag-concept">Theoretical</span></div>
+      </div>
+      <div class="chevron">▾</div>
+    </div>
+    <div class="card-body">
+      <div class="answer-label">✦ Answer</div>
+      <div class="answer-text">
+        <p>This is a <strong>historical bug</strong> from JavaScript's first version. In the original implementation, values were stored as type tags. <code>null</code> had the tag <code>000</code> (same as objects), so <code>typeof null</code> returns <code>'object'</code>. It was never fixed to maintain backwards compatibility.</p>
+<pre><code><span class="kw">typeof</span> <span class="kw">null</span>        <span class="cmt">// 'object' ← bug!</span>
+<span class="kw">typeof</span> <span class="kw">undefined</span>   <span class="cmt">// 'undefined'</span>
+<span class="kw">typeof</span> []          <span class="cmt">// 'object'</span>
+<span class="kw">typeof</span> {}          <span class="cmt">// 'object'</span>
+<span class="kw">typeof</span> <span class="kw">function</span>(){} <span class="cmt">// 'function'</span>
+
+<span class="cmt">// Safe null check</span>
+value === <span class="kw">null</span>                            <span class="cmt">// exact null check</span>
+value == <span class="kw">null</span>                             <span class="cmt">// null OR undefined</span>
+<span class="fn">Object</span>.<span class="fn">prototype</span>.toString.<span class="fn">call</span>(<span class="kw">null</span>)     <span class="cmt">// '[object Null]'</span>
+<span class="fn">Object</span>.<span class="fn">prototype</span>.toString.<span class="fn">call</span>([])       <span class="cmt">// '[object Array]'</span>
+<span class="fn">Object</span>.<span class="fn">prototype</span>.toString.<span class="fn">call</span>(<span class="kw">new</span> <span class="fn">Date</span>)<span class="cmt">// '[object Date]'</span></code></pre>
+      </div>
+    </div>
+  </div>
+
+  <!-- Q24 -->
+  <div class="card" data-cat="js" data-tags="practical concept">
+    <div class="card-header" onclick="toggle(this)">
+      <div class="q-num">24</div>
+      <div>
+        <div class="q-text">What are ES2022+ features? (Private class fields, Top-level await, <code>at()</code>, <code>structuredClone</code>, etc.)</div>
+        <div class="q-meta"><span class="tag tag-concept">Theoretical</span><span class="tag tag-practical">Practical</span></div>
+      </div>
+      <div class="chevron">▾</div>
+    </div>
+    <div class="card-body">
+      <div class="answer-label">✦ Answer</div>
+      <div class="answer-text">
+<pre><code><span class="cmt">// Private class fields (ES2022)</span>
+<span class="kw">class</span> <span class="fn">Counter</span> {
+  #count = <span class="num">0</span>;         <span class="cmt">// truly private</span>
+  <span class="kw">static</span> #instances = <span class="num">0</span>;
+  <span class="fn">constructor</span>() { <span class="fn">Counter</span>.#instances++; }
+  <span class="fn">increment</span>() { <span class="kw">this</span>.#count++; }
+  <span class="fn">get</span> <span class="fn">value</span>() { <span class="kw">return this</span>.#count; }
+}
+
+<span class="cmt">// Array.at() — negative indexing</span>
+[<span class="num">1</span>, <span class="num">2</span>, <span class="num">3</span>].<span class="fn">at</span>(-<span class="num">1</span>); <span class="cmt">// 3</span>
+
+<span class="cmt">// structuredClone — deep clone</span>
+<span class="kw">const</span> original = { date: <span class="kw">new</span> <span class="fn">Date</span>(), nested: { arr: [<span class="num">1</span>, <span class="num">2</span>] } };
+<span class="kw">const</span> clone = <span class="fn">structuredClone</span>(original);
+
+<span class="cmt">// Object.hasOwn (replaces hasOwnProperty)</span>
+<span class="fn">Object</span>.<span class="fn">hasOwn</span>(user, <span class="str">'name'</span>);
+
+<span class="cmt">// Error cause</span>
+<span class="kw">throw new</span> <span class="fn">Error</span>(<span class="str">'Failed'</span>, { cause: originalError });
+
+<span class="cmt">// Top-level await (in modules)</span>
+<span class="kw">const</span> config = <span class="kw">await</span> <span class="fn">loadConfig</span>();
+<span class="kw">export default</span> config;</code></pre>
+      </div>
+    </div>
+  </div>
+
+  <!-- Q25 -->
+  <div class="card" data-cat="js" data-tags="practical concept">
+    <div class="card-header" onclick="toggle(this)">
+      <div class="q-num">25</div>
+      <div>
+        <div class="q-text">Implement a rate limiter that allows at most N requests per second using the Token Bucket algorithm.</div>
+        <div class="q-meta"><span class="tag tag-practical">Practical</span><span class="tag tag-advanced">Advanced</span></div>
+      </div>
+      <div class="chevron">▾</div>
+    </div>
+    <div class="card-body">
+      <div class="answer-label">✦ Answer</div>
+      <div class="answer-text">
+<pre><code><span class="kw">class</span> <span class="fn">RateLimiter</span> {
+  #tokens;
+  #maxTokens;
+  #refillRate;   <span class="cmt">// tokens per ms</span>
+  #lastRefill;
+
+  <span class="fn">constructor</span>(maxPerSecond) {
+    <span class="kw">this</span>.#tokens    = maxPerSecond;
+    <span class="kw">this</span>.#maxTokens = maxPerSecond;
+    <span class="kw">this</span>.#refillRate = maxPerSecond / <span class="num">1000</span>;
+    <span class="kw">this</span>.#lastRefill = <span class="fn">Date</span>.<span class="fn">now</span>();
+  }
+
+  #refill() {
+    <span class="kw">const</span> now = <span class="fn">Date</span>.<span class="fn">now</span>();
+    <span class="kw">const</span> elapsed = now - <span class="kw">this</span>.#lastRefill;
+    <span class="kw">this</span>.#tokens = <span class="fn">Math</span>.<span class="fn">min</span>(
+      <span class="kw">this</span>.#maxTokens,
+      <span class="kw">this</span>.#tokens + elapsed * <span class="kw">this</span>.#refillRate
+    );
+    <span class="kw">this</span>.#lastRefill = now;
+  }
+
+  <span class="fn">tryConsume</span>() {
+    <span class="kw">this</span>.#refill();
+    <span class="kw">if</span> (<span class="kw">this</span>.#tokens &lt; <span class="num">1</span>) <span class="kw">return false</span>;
+    <span class="kw">this</span>.#tokens--;
+    <span class="kw">return true</span>;
+  }
+}
+
+<span class="kw">const</span> limiter = <span class="kw">new</span> <span class="fn">RateLimiter</span>(<span class="num">5</span>); <span class="cmt">// 5 req/sec</span>
+<span class="kw">if</span> (limiter.<span class="fn">tryConsume</span>()) { <span class="fn">callAPI</span>(); }
+<span class="kw">else</span> { <span class="fn">showError</span>(<span class="str">'Rate limit exceeded'</span>); }</code></pre>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- ══════════════════════════════════════════════════
+     HTML QUESTIONS
+════════════════════════════════════════════════════ -->
+<div class="section" id="html-section">
+  <div class="section-title"><span class="dot dot-html"></span> HTML5 Questions</div>
+
+  <!-- H1 -->
+  <div class="card" data-cat="html" data-tags="concept">
+    <div class="card-header" onclick="toggle(this)">
+      <div class="q-num">26</div>
+      <div>
+        <div class="q-text">What is Semantic HTML? Why does it matter for accessibility and SEO?</div>
+        <div class="q-meta"><span class="tag tag-concept">Theoretical</span></div>
+      </div>
+      <div class="chevron">▾</div>
+    </div>
+    <div class="card-body">
+      <div class="answer-label">✦ Answer</div>
+      <div class="answer-text">
+        <p>Semantic HTML uses elements that convey <strong>meaning</strong> about the content, not just appearance.</p>
+<pre><code><span class="cmt">&lt;!-- Non-semantic --&gt;</span>
+&lt;div class="header"&gt;&lt;div class="nav"&gt;...&lt;/div&gt;&lt;/div&gt;
+
+<span class="cmt">&lt;!-- Semantic --&gt;</span>
+&lt;header&gt;
+  &lt;nav aria-label="Main navigation"&gt;
+    &lt;ul&gt;
+      &lt;li&gt;&lt;a href="/"&gt;Home&lt;/a&gt;&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/nav&gt;
+&lt;/header&gt;
+&lt;main&gt;
+  &lt;article&gt;
+    &lt;h1&gt;Title&lt;/h1&gt;
+    &lt;section&gt;...&lt;/section&gt;
+    &lt;aside&gt;Related&lt;/aside&gt;
+  &lt;/article&gt;
+&lt;/main&gt;
+&lt;footer&gt;&lt;address&gt;Contact&lt;/address&gt;&lt;/footer&gt;</code></pre>
+        <div class="key-point"><strong>Benefits:</strong> Screen readers announce roles correctly, search engines understand structure better, code is more maintainable, and accessibility is built-in.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- H2 -->
+  <div class="card" data-cat="html" data-tags="concept practical">
+    <div class="card-header" onclick="toggle(this)">
+      <div class="q-num">27</div>
+      <div>
+        <div class="q-text">Explain ARIA roles and attributes. When should you use them vs native HTML elements?</div>
+        <div class="q-meta"><span class="tag tag-concept">Theoretical</span><span class="tag tag-advanced">Advanced</span></div>
+      </div>
+      <div class="chevron">▾</div>
+    </div>
+    <div class="card-body">
+      <div class="answer-label">✦ Answer</div>
+      <div class="answer-text">
+        <p>ARIA (Accessible Rich Internet Applications) adds accessibility metadata when HTML alone is insufficient.</p>
+        <p><strong>Rule:</strong> Use native HTML first. ARIA is for when semantics can't be expressed with HTML.</p>
+<pre><code><span class="cmt">&lt;!-- Native is always preferred --&gt;</span>
+&lt;button&gt;Submit&lt;/button&gt;   <span class="cmt">&lt;!-- NOT &lt;div role="button"&gt; --&gt;</span>
+
+<span class="cmt">&lt;!-- When ARIA is necessary (custom components) --&gt;</span>
+&lt;div
+  role="tablist"
+  aria-label="Settings tabs"&gt;
+  &lt;button
+    role="tab"
+    aria-selected="true"
+    aria-controls="panel-1"
+    id="tab-1"&gt;General&lt;/button&gt;
+&lt;/div&gt;
+&lt;div
+  role="tabpanel"
+  id="panel-1"
+  aria-labelledby="tab-1"
+  tabindex="0"&gt;...&lt;/div&gt;
+
+<span class="cmt">&lt;!-- Live regions for dynamic content --&gt;</span>
+&lt;div aria-live="polite" aria-atomic="true"&gt;
+  Status updates here...
+&lt;/div&gt;</code></pre>
+        <div class="key-point"><strong>ARIA First Aid:</strong> role, aria-label, aria-labelledby, aria-describedby, aria-expanded, aria-hidden, aria-live, aria-required.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- H3 -->
+  <div class="card" data-cat="html" data-tags="concept practical">
+    <div class="card-header" onclick="toggle(this)">
+      <div class="q-num">28</div>
+      <div>
+        <div class="q-text">What is the Shadow DOM? How does it achieve style encapsulation?</div>
+        <div class="q-meta"><span class="tag tag-concept">Theoretical</span><span class="tag tag-advanced">Advanced</span></div>
+      </div>
+      <div class="chevron">▾</div>
+    </div>
+    <div class="card-body">
+      <div class="answer-label">✦ Answer</div>
+      <div class="answer-text">
+        <p>Shadow DOM creates an isolated DOM subtree — styles inside don't leak out and global styles can't pierce in (unless using CSS custom properties).</p>
+<pre><code><span class="cmt">&lt;!-- Custom Element with Shadow DOM --&gt;</span>
+&lt;script&gt;
+<span class="kw">class</span> <span class="fn">MyCard</span> <span class="kw">extends</span> HTMLElement {
+  <span class="fn">constructor</span>() {
+    <span class="kw">super</span>();
+    <span class="kw">const</span> shadow = <span class="kw">this</span>.<span class="fn">attachShadow</span>({ mode: <span class="str">'open'</span> });
+    shadow.innerHTML = <span class="str">`
+      &lt;style&gt;
+        :host { display: block; border: 1px solid #ccc; }
+        h2 { color: navy; }  /* scoped — won't affect page */
+      &lt;/style&gt;
+      &lt;h2&gt;&lt;slot name="title"&gt;&lt;/slot&gt;&lt;/h2&gt;
+      &lt;slot&gt;&lt;/slot&gt;
+    `</span>;
+  }
+}
+<span class="fn">customElements</span>.<span class="fn">define</span>(<span class="str">'my-card'</span>, <span class="fn">MyCard</span>);
+&lt;/script&gt;
+
+<span class="cmt">&lt;!-- Usage --&gt;</span>
+&lt;my-card&gt;
+  &lt;span slot="title"&gt;Hello&lt;/span&gt;
+  &lt;p&gt;Content here&lt;/p&gt;
+&lt;/my-card&gt;</code></pre>
+        <div class="key-point"><strong>CSS custom properties</strong> (variables) pierce Shadow DOM boundaries, making them ideal for theming.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- H4 -->
+  <div class="card" data-cat="html" data-tags="concept practical">
+    <div class="card-header" onclick="toggle(this)">
+      <div class="q-num">29</div>
+      <div>
+        <div class="q-text">What is the difference between <code>defer</code> and <code>async</code> script attributes? When to use each?</div>
+        <div class="q-meta"><span class="tag tag-concept">Theoretical</span><span class="tag tag-practical">Practical</span></div>
+      </div>
+      <div class="chevron">▾</div>
+    </div>
+    <div class="card-body">
+      <div class="answer-label">✦ Answer</div>
+      <div class="answer-text">
+<pre><code><span class="cmt">&lt;!-- Normal — blocks HTML parsing --&gt;</span>
+&lt;script src="app.js"&gt;&lt;/script&gt;
+
+<span class="cmt">&lt;!-- async — downloads in parallel, executes immediately when ready
+     Order not guaranteed, may run before DOM ready --&gt;</span>
+&lt;script async src="analytics.js"&gt;&lt;/script&gt;
+
+<span class="cmt">&lt;!-- defer — downloads in parallel, executes after HTML parsed
+     Order IS maintained, runs before DOMContentLoaded --&gt;</span>
+&lt;script defer src="app.js"&gt;&lt;/script&gt;
+&lt;script defer src="plugin.js"&gt;&lt;/script&gt; <span class="cmt">&lt;!-- runs after app.js --&gt;</span></code></pre>
+        <ul>
+          <li><strong>defer</strong> — use for scripts that need the DOM or depend on each other (frameworks, app code)</li>
+          <li><strong>async</strong> — use for independent scripts (analytics, ads, tracking)</li>
+        </ul>
+        <div class="key-point"><strong>Modern apps:</strong> Put scripts in <code>&lt;head&gt;</code> with <code>defer</code>. Avoids render-blocking AND ensures DOM is ready.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- H5 -->
+  <div class="card" data-cat="html" data-tags="concept practical">
+    <div class="card-header" onclick="toggle(this)">
+      <div class="q-num">30</div>
+      <div>
+        <div class="q-text">Explain localStorage, sessionStorage, and Cookies. What are their security differences?</div>
+        <div class="q-meta"><span class="tag tag-concept">Theoretical</span><span class="tag tag-practical">Practical</span></div>
+      </div>
+      <div class="chevron">▾</div>
+    </div>
+    <div class="card-body">
+      <div class="answer-label">✦ Answer</div>
+      <div class="answer-text">
+        <ul>
+          <li><strong>localStorage</strong> — persists after tab/browser close, ~5MB, same origin only</li>
+          <li><strong>sessionStorage</strong> — cleared on tab close, ~5MB, per-tab scope</li>
+          <li><strong>Cookies</strong> — sent with every HTTP request, can be HttpOnly, Secure, SameSite</li>
+        </ul>
+<pre><code><span class="cmt">// localStorage / sessionStorage</span>
+localStorage.<span class="fn">setItem</span>(<span class="str">'theme'</span>, <span class="str">'dark'</span>);
+localStorage.<span class="fn">getItem</span>(<span class="str">'theme'</span>);
+localStorage.<span class="fn">removeItem</span>(<span class="str">'theme'</span>);
+
+<span class="cmt">// Secure cookie (set server-side)</span>
+<span class="cmt">// Set-Cookie: token=xyz; HttpOnly; Secure; SameSite=Strict; Path=/</span>
+
+<span class="cmt">// Security matrix:
+// | Feature        | localStorage | Cookie       |
+// | XSS risk       | HIGH ✗       | HttpOnly ✓   |
+// | CSRF risk      | N/A          | SameSite ✓   |
+// | Sent to server | No           | Yes (auto)   |
+// | Expiry control | Manual JS    | Max-Age/Expires |</span></code></pre>
+        <div class="key-point"><strong>Best practice:</strong> Store JWT in HttpOnly cookie, not localStorage. XSS can't read HttpOnly cookies.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- H6 -->
+  <div class="card" data-cat="html" data-tags="practical concept">
+    <div class="card-header" onclick="toggle(this)">
+      <div class="q-num">31</div>
+      <div>
+        <div class="q-text">What is the <code>&lt;picture&gt;</code> element? How do you implement responsive images with art direction?</div>
+        <div class="q-meta"><span class="tag tag-practical">Practical</span><span class="tag tag-concept">Theoretical</span></div>
+      </div>
+      <div class="chevron">▾</div>
+    </div>
+    <div class="card-body">
+      <div class="answer-label">✦ Answer</div>
+      <div class="answer-text">
+<pre><code><span class="cmt">&lt;!-- srcset — same image, different sizes --&gt;</span>
+&lt;img
+  src="hero-800.jpg"
+  srcset="hero-400.jpg 400w, hero-800.jpg 800w, hero-1600.jpg 1600w"
+  sizes="(max-width: 600px) 100vw, (max-width: 1200px) 50vw, 800px"
+  alt="Hero image"
+  loading="lazy"
+  decoding="async"
+/&gt;
+
+<span class="cmt">&lt;!-- picture — art direction (different crops/images) --&gt;</span>
+&lt;picture&gt;
+  <span class="cmt">&lt;!-- WebP for modern browsers --&gt;</span>
+  &lt;source
+    type="image/webp"
+    media="(min-width: 800px)"
+    srcset="hero-wide.webp"
+  /&gt;
+  <span class="cmt">&lt;!-- Portrait crop for mobile --&gt;</span>
+  &lt;source
+    media="(max-width: 799px)"
+    srcset="hero-portrait.jpg"
+  /&gt;
+  <span class="cmt">&lt;!-- Fallback --&gt;</span>
+  &lt;img src="hero-wide.jpg" alt="Hero" /&gt;
+&lt;/picture&gt;</code></pre>
+        <div class="key-point"><strong>Performance tip:</strong> Use <code>loading="lazy"</code> for below-fold images. Use <code>fetchpriority="high"</code> for LCP images.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- H7 -->
+  <div class="card" data-cat="html" data-tags="concept practical">
+    <div class="card-header" onclick="toggle(this)">
+      <div class="q-num">32</div>
+      <div>
+        <div class="q-text">What are Web Vitals? How does HTML structure impact LCP, CLS, and FID/INP?</div>
+        <div class="q-meta"><span class="tag tag-concept">Theoretical</span><span class="tag tag-advanced">Advanced</span></div>
+      </div>
+      <div class="chevron">▾</div>
+    </div>
+    <div class="card-body">
+      <div class="answer-label">✦ Answer</div>
+      <div class="answer-text">
+        <ul>
+          <li><strong>LCP (Largest Contentful Paint)</strong> — time for largest element. Fix: preload hero image, avoid render-blocking.</li>
+          <li><strong>CLS (Cumulative Layout Shift)</strong> — visual stability. Fix: set width/height on images, avoid DOM insertion above content.</li>
+          <li><strong>INP (Interaction to Next Paint)</strong> — responsiveness. Fix: break up long tasks, use Web Workers.</li>
+        </ul>
+<pre><code><span class="cmt">&lt;!-- LCP: Preload critical image --&gt;</span>
+&lt;link rel="preload" as="image" href="hero.webp" fetchpriority="high" /&gt;
+
+<span class="cmt">&lt;!-- CLS: Always define dimensions --&gt;</span>
+&lt;img src="photo.jpg" width="800" height="600" alt="..." /&gt;
+
+<span class="cmt">&lt;!-- CLS: Reserve space for async content --&gt;</span>
+&lt;div style="min-height: 200px"&gt;
+  <span class="cmt">&lt;!-- ad or async widget loads here --&gt;</span>
+&lt;/div&gt;
+
+<span class="cmt">&lt;!-- Preconnect to critical origins --&gt;</span>
+&lt;link rel="preconnect" href="https://fonts.googleapis.com" /&gt;
+&lt;link rel="dns-prefetch" href="https://cdn.example.com" /&gt;</code></pre>
+      </div>
+    </div>
+  </div>
+
+  <!-- H8 -->
+  <div class="card" data-cat="html" data-tags="practical concept">
+    <div class="card-header" onclick="toggle(this)">
+      <div class="q-num">33</div>
+      <div>
+        <div class="q-text">Explain Content Security Policy (CSP). How do you prevent XSS using HTTP headers and HTML?</div>
+        <div class="q-meta"><span class="tag tag-practical">Practical</span><span class="tag tag-advanced">Advanced</span></div>
+      </div>
+      <div class="chevron">▾</div>
+    </div>
+    <div class="card-body">
+      <div class="answer-label">✦ Answer</div>
+      <div class="answer-text">
+        <p>CSP is a browser security feature that restricts which resources can be loaded, preventing XSS injection.</p>
+<pre><code><span class="cmt">&lt;!-- Via meta tag (limited) --&gt;</span>
+&lt;meta
+  http-equiv="Content-Security-Policy"
+  content="default-src 'self'; script-src 'self' 'nonce-{random}'; style-src 'self'"
+/&gt;
+
+<span class="cmt">&lt;!-- Nonce-based scripts (blocks injected scripts) --&gt;</span>
+&lt;script nonce="random123"&gt;
+  <span class="cmt">// Only this runs — even if attacker injects script tags</span>
+&lt;/script&gt;
+
+<span class="cmt">&lt;!-- Via HTTP header (preferred) --&gt;</span>
+<span class="cmt">Content-Security-Policy:</span>
+<span class="cmt">  default-src 'self';</span>
+<span class="cmt">  script-src 'self' https://trusted.cdn.com 'nonce-abc123';</span>
+<span class="cmt">  img-src 'self' data: https:;</span>
+<span class="cmt">  frame-ancestors 'none';</span>
+<span class="cmt">  upgrade-insecure-requests;</span></code></pre>
+        <div class="key-point"><strong>Also set:</strong> <code>X-Frame-Options: DENY</code>, <code>X-Content-Type-Options: nosniff</code>, <code>Referrer-Policy: strict-origin-when-cross-origin</code>.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- H9 -->
+  <div class="card" data-cat="html" data-tags="practical">
+    <div class="card-header" onclick="toggle(this)">
+      <div class="q-num">34</div>
+      <div>
+        <div class="q-text">What are HTML5 Canvas vs SVG? When would you choose one over the other?</div>
+        <div class="q-meta"><span class="tag tag-concept">Theoretical</span><span class="tag tag-practical">Practical</span></div>
+      </div>
+      <div class="chevron">▾</div>
+    </div>
+    <div class="card-body">
+      <div class="answer-label">✦ Answer</div>
+      <div class="answer-text">
+<pre><code><span class="cmt">&lt;!-- SVG: vector, scalable, DOM accessible, declarative --&gt;</span>
+&lt;svg width="100" height="100" viewBox="0 0 100 100"&gt;
+  &lt;circle cx="50" cy="50" r="40"
+    fill="transparent" stroke="navy" stroke-width="4" /&gt;
+  <span class="cmt">&lt;!-- Animatable via CSS/JS, accessible, zoomable --&gt;</span>
+&lt;/svg&gt;
+
+<span class="cmt">&lt;!-- Canvas: pixel-based, imperative, high performance --&gt;</span>
+&lt;canvas id="c" width="600" height="400"&gt;&lt;/canvas&gt;
+&lt;script&gt;
+  <span class="kw">const</span> ctx = document.<span class="fn">getElementById</span>(<span class="str">'c'</span>).<span class="fn">getContext</span>(<span class="str">'2d'</span>);
+  ctx.<span class="fn">beginPath</span>();
+  ctx.<span class="fn">arc</span>(<span class="num">50</span>, <span class="num">50</span>, <span class="num">40</span>, <span class="num">0</span>, Math.PI * <span class="num">2</span>);
+  ctx.<span class="fn">fillStyle</span> = <span class="str">'#7c3aed'</span>;
+  ctx.<span class="fn">fill</span>();
+&lt;/script&gt;</code></pre>
+        <ul>
+          <li><strong>Use SVG:</strong> icons, logos, charts with few elements, animations, accessibility needed</li>
+          <li><strong>Use Canvas:</strong> games, real-time visualizations, 10,000+ elements, image manipulation, WebGL</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- H10 -->
+  <div class="card" data-cat="html" data-tags="practical concept">
+    <div class="card-header" onclick="toggle(this)">
+      <div class="q-num">35</div>
+      <div>
+        <div class="q-text">What are the new HTML5 form features? Explain constraint validation API and custom validity.</div>
+        <div class="q-meta"><span class="tag tag-practical">Practical</span><span class="tag tag-concept">Theoretical</span></div>
+      </div>
+      <div class="chevron">▾</div>
+    </div>
+    <div class="card-body">
+      <div class="answer-label">✦ Answer</div>
+      <div class="answer-text">
+<pre><code><span class="cmt">&lt;!-- HTML5 input types --&gt;</span>
+&lt;input type="email"    required /&gt;
+&lt;input type="url"      /&gt;
+&lt;input type="date"     min="2024-01-01" /&gt;
+&lt;input type="number"   min="0" max="100" step="5" /&gt;
+&lt;input type="range"    /&gt;
+&lt;input type="color"    /&gt;
+&lt;input type="tel"      pattern="[0-9]{10}" /&gt;
+&lt;input type="search"   /&gt;
+
+<span class="cmt">&lt;!-- Constraint Validation API --&gt;</span>
+&lt;script&gt;
+<span class="kw">const</span> input = document.<span class="fn">querySelector</span>(<span class="str">'#username'</span>);
+
+<span class="cmt">// Check validity</span>
+input.validity.valid;          <span class="cmt">// boolean</span>
+input.validity.valueMissing;   <span class="cmt">// true if required and empty</span>
+input.validity.patternMismatch;<span class="cmt">// true if pattern fails</span>
+input.validationMessage;       <span class="cmt">// browser message</span>
+
+<span class="cmt">// Custom validity</span>
+input.<span class="fn">addEventListener</span>(<span class="str">'input'</span>, () =&gt; {
+  <span class="kw">if</span> (input.value.<span class="fn">includes</span>(<span class="str">' '</span>)) {
+    input.<span class="fn">setCustomValidity</span>(<span class="str">'Username cannot contain spaces'</span>);
+  } <span class="kw">else</span> {
+    input.<span class="fn">setCustomValidity</span>(<span class="str">''</span>); <span class="cmt">// clear error</span>
+  }
+});
+
+<span class="cmt">// reportValidity() shows browser bubble</span>
+document.<span class="fn">querySelector</span>(<span class="str">'form'</span>).<span class="fn">addEventListener</span>(<span class="str">'submit'</span>, e =&gt; {
+  <span class="kw">if</span> (!e.target.<span class="fn">checkValidity</span>()) {
+    e.<span class="fn">preventDefault</span>();
+    e.target.<span class="fn">reportValidity</span>();
+  }
+});
+&lt;/script&gt;</code></pre>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- ── FOOTER ─────────────────────────────────────── -->
+<footer>
+  <p>35 Questions · JavaScript & HTML5 · Senior / Lead Level Interview Prep</p>
+  <p style="margin-top:6px; font-size:0.75rem;">Click any card to reveal the answer &bull; Use filters to focus on topics</p>
+</footer>
+
+<!-- ══════════════════════════════════════════════════
+     SCRIPTS
+════════════════════════════════════════════════════ -->
+<script>
+  /* ── Toggle card ── */
+  let openCount = 0;
+  function toggle(header) {
+    const card = header.closest('.card');
+    const wasOpen = card.classList.contains('open');
+    card.classList.toggle('open');
+    openCount += wasOpen ? -1 : 1;
+    document.getElementById('openQ').textContent = openCount;
+    updateProgress();
+  }
+
+  /* ── Progress bar ── */
+  function updateProgress() {
+    const total = document.querySelectorAll('.card:not(.hidden)').length;
+    const pct = total ? (openCount / total) * 100 : 0;
+    document.getElementById('progressBar').style.width = pct + '%';
+  }
+
+  /* ── Filters ── */
+  const filterBtns = document.querySelectorAll('.filter-btn');
+  filterBtns.forEach(btn => {
+    btn.addEventListener('click', () => {
+      filterBtns.forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      applyFilters();
+    });
+  });
+
+  /* ── Search ── */
+  document.getElementById('search').addEventListener('input', applyFilters);
+
+  function applyFilters() {
+    const activeFilter = document.querySelector('.filter-btn.active').dataset.filter;
+    const searchTerm   = document.getElementById('search').value.toLowerCase();
+    const cards        = document.querySelectorAll('.card');
+    let visCount = 0;
+
+    cards.forEach(card => {
+      const cat  = card.dataset.cat;
+      const tags = card.dataset.tags || '';
+      const text = card.querySelector('.q-text').textContent.toLowerCase();
+
+      const matchFilter =
+        activeFilter === 'all'      ||
+        activeFilter === cat        ||
+        tags.includes(activeFilter);
+
+      const matchSearch = !searchTerm || text.includes(searchTerm);
+
+      if (matchFilter && matchSearch) {
+        card.classList.remove('hidden');
+        visCount++;
+      } else {
+        card.classList.add('hidden');
+      }
+    });
+
+    /* Hide section titles if no visible cards */
+    document.querySelectorAll('.section').forEach(sec => {
+      const anyVisible = [...sec.querySelectorAll('.card')].some(c => !c.classList.contains('hidden'));
+      sec.style.display = anyVisible ? '' : 'none';
+    });
+
+    updateProgress();
+  }
+</script>
+</body>
+</html>
