@@ -1,0 +1,318 @@
+
+Angular Small Coding Interview Questions and Answers
+
+1. Create a simple Angular component.
+
+Question:
+Create a component that displays "Hello Angular".
+
+Answer:
+import { Component } from '@angular/core';
+
+@Component({
+  selector: 'app-hello',
+  template: `<h2>Hello Angular</h2>`
+})
+export class HelloComponent {}
+
+--------------------------------------------------
+
+2. Property Binding
+
+Question:
+Bind an image URL dynamically.
+
+Answer:
+Component:
+imageUrl = "https://example.com/img.png";
+
+Template:
+<img [src]="imageUrl">
+
+--------------------------------------------------
+
+3. Event Binding
+
+Question:
+Call a function when button is clicked.
+
+Answer:
+Template:
+<button (click)="showMessage()">Click</button>
+
+Component:
+showMessage(){
+ console.log("Button clicked");
+}
+
+--------------------------------------------------
+
+4. Two Way Binding
+
+Question:
+Bind input field to variable.
+
+Answer:
+Template:
+<input [(ngModel)]="name">
+
+Component:
+name = "";
+
+--------------------------------------------------
+
+5. ngIf Example
+
+Question:
+Show a message only if user is logged in.
+
+Answer:
+Component:
+isLoggedIn = true;
+
+Template:
+<div *ngIf="isLoggedIn">
+ Welcome User
+</div>
+
+--------------------------------------------------
+
+6. ngFor Example
+
+Question:
+Loop through an array.
+
+Answer:
+Component:
+users = ["John","Mike","Sara"]
+
+Template:
+<li *ngFor="let user of users">
+ {{user}}
+</li>
+
+--------------------------------------------------
+
+7. Create a Service
+
+Question:
+Create a service that returns user data.
+
+Answer:
+import { Injectable } from '@angular/core';
+
+@Injectable({
+ providedIn: 'root'
+})
+export class UserService{
+
+ getUsers(){
+  return ["John","Mike","Sara"]
+ }
+
+}
+
+--------------------------------------------------
+
+8. Use Service in Component
+
+Question:
+Fetch data from service.
+
+Answer:
+constructor(private userService:UserService){}
+
+ngOnInit(){
+ this.users = this.userService.getUsers()
+}
+
+--------------------------------------------------
+
+9. Simple Pipe
+
+Question:
+Convert text to uppercase using pipe.
+
+Answer:
+Template:
+{{ name | uppercase }}
+
+--------------------------------------------------
+
+10. Custom Pipe
+
+Question:
+Create a pipe to reverse a string.
+
+Answer:
+import { Pipe, PipeTransform } from '@angular/core';
+
+@Pipe({name:'reverse'})
+export class ReversePipe implements PipeTransform{
+
+ transform(value:string){
+  return value.split('').reverse().join('');
+ }
+
+}
+
+Usage:
+{{ "Angular" | reverse }}
+
+--------------------------------------------------
+
+11. Click Counter
+
+Question:
+Create button counter.
+
+Answer:
+
+count = 0
+
+Template:
+<button (click)="count = count + 1">
+ Click {{count}}
+</button>
+
+--------------------------------------------------
+
+12. Input Decorator
+
+Question:
+Pass data from parent to child.
+
+Answer:
+
+Child Component:
+
+@Input() message:string;
+
+Template:
+{{message}}
+
+--------------------------------------------------
+
+13. Output Decorator
+
+Question:
+Send data from child to parent.
+
+Answer:
+
+@Output() notify = new EventEmitter();
+
+send(){
+ this.notify.emit("Hello Parent");
+}
+
+--------------------------------------------------
+
+14. TrackBy Example
+
+Question:
+Optimize ngFor rendering.
+
+Answer:
+
+trackById(index,item){
+ return item.id;
+}
+
+Template:
+<li *ngFor="let item of items; trackBy:trackById"></li>
+
+--------------------------------------------------
+
+15. HTTP GET Example
+
+Question:
+Fetch API data.
+
+Answer:
+
+constructor(private http:HttpClient){}
+
+ngOnInit(){
+ this.http.get("https://api.example.com/users")
+   .subscribe(data => console.log(data))
+}
+
+--------------------------------------------------
+
+16. Reactive Form Example
+
+Question:
+Create simple reactive form.
+
+Answer:
+
+form = new FormGroup({
+ name: new FormControl('')
+});
+
+Template:
+<form [formGroup]="form">
+<input formControlName="name">
+</form>
+
+--------------------------------------------------
+
+17. Router Navigation
+
+Question:
+Navigate to another page.
+
+Answer:
+
+constructor(private router:Router){}
+
+goHome(){
+ this.router.navigate(['/home'])
+}
+
+--------------------------------------------------
+
+18. Lazy Loading Module
+
+Question:
+Load module lazily.
+
+Answer:
+
+{
+ path:'admin',
+ loadChildren:() => import('./admin/admin.module')
+ .then(m => m.AdminModule)
+}
+
+--------------------------------------------------
+
+19. Lifecycle Hook
+
+Question:
+Run code when component loads.
+
+Answer:
+
+ngOnInit(){
+ console.log("Component loaded")
+}
+
+--------------------------------------------------
+
+20. Change Detection Optimization
+
+Question:
+Use OnPush strategy.
+
+Answer:
+
+@Component({
+ selector:'app-demo',
+ changeDetection:ChangeDetectionStrategy.OnPush
+})
+
+--------------------------------------------------
+
+These small coding questions are commonly asked in Angular developer interviews.
