@@ -1,0 +1,253 @@
+
+Interview-1: JavaScript & HTML Important Interview Questions (Senior Level)
+
+1. What is the difference between let, const, and var?
+
+var
+- Function scoped
+- Can be redeclared and updated
+- Hoisted with undefined
+
+let
+- Block scoped
+- Cannot be redeclared in same scope
+- Can be updated
+
+const
+- Block scoped
+- Cannot be redeclared or updated
+- Must be initialized during declaration
+
+
+2. What is the difference between undefined and not defined?
+
+undefined
+A variable declared but not assigned a value.
+
+Example:
+let a;
+console.log(a); // undefined
+
+not defined
+Variable never declared.
+
+Example:
+console.log(b); // ReferenceError
+
+
+3. What is the difference between synchronous and asynchronous JavaScript?
+
+Synchronous
+Code executes line by line.
+
+Example:
+console.log("A")
+console.log("B")
+
+Output:
+A
+B
+
+Asynchronous
+Execution happens later.
+
+Example:
+setTimeout(()=>console.log("A"),1000)
+console.log("B")
+
+Output:
+B
+A
+
+
+4. What is Promise in JavaScript?
+
+Promise represents the eventual completion or failure of an asynchronous operation.
+
+States:
+- Pending
+- Fulfilled
+- Rejected
+
+Example:
+
+let p = new Promise((resolve,reject)=>{
+   resolve("Success")
+})
+
+p.then(res=>console.log(res))
+
+
+5. Difference between microtask and macrotask?
+
+Microtasks
+- Promise callbacks
+- MutationObserver
+
+Macrotasks
+- setTimeout
+- setInterval
+- DOM events
+
+Execution priority:
+Microtask queue executes before macrotask queue.
+
+
+6. What is Arrow Function?
+
+Arrow function provides shorter syntax and lexical this binding.
+
+Example:
+
+const add = (a,b)=> a+b
+
+
+7. Difference between function declaration and function expression
+
+Function Declaration
+
+function test(){
+ return "Hello"
+}
+
+Function Expression
+
+const test = function(){
+ return "Hello"
+}
+
+
+8. What is DOM?
+
+DOM (Document Object Model) represents HTML as a tree structure.
+
+JavaScript uses DOM to manipulate elements.
+
+Example:
+
+document.getElementById("demo")
+
+
+9. What is the difference between getElementById and querySelector?
+
+getElementById
+Returns element using ID.
+
+querySelector
+Returns first matching CSS selector.
+
+Example:
+
+document.getElementById("id")
+
+document.querySelector(".class")
+
+
+10. What is Event Bubbling?
+
+Event starts from target element and bubbles up to parent elements.
+
+Example:
+
+div → body → html → document
+
+
+11. What is Event Capturing?
+
+Event travels from top to target element.
+
+Order:
+document → html → body → div
+
+
+12. What is preventDefault()?
+
+Stops default browser behavior.
+
+Example:
+
+form submit page reload
+
+
+13. What is stopPropagation()?
+
+Stops event from propagating to parent elements.
+
+
+14. What is template literal?
+
+Allows string interpolation.
+
+Example:
+
+let name = "John"
+
+console.log(`Hello ${name}`)
+
+
+15. What is destructuring?
+
+Extract values from arrays or objects.
+
+Example:
+
+const user = {name:"John",age:30}
+
+const {name,age} = user
+
+
+16. What is spread operator?
+
+Used to expand elements.
+
+Example:
+
+const arr1=[1,2]
+const arr2=[...arr1,3,4]
+
+
+17. What is REST parameter?
+
+Collects multiple parameters into array.
+
+Example:
+
+function sum(...nums){
+ return nums.reduce((a,b)=>a+b)
+}
+
+
+18. What is the difference between innerHTML and outerHTML?
+
+innerHTML
+Returns content inside element.
+
+outerHTML
+Returns entire element including tag.
+
+
+19. What is lazy loading in HTML?
+
+Delays loading of images until needed.
+
+Example:
+
+<img src="image.jpg" loading="lazy">
+
+
+20. What is semantic HTML?
+
+Semantic elements describe meaning of content.
+
+Examples:
+
+<header>
+<nav>
+<section>
+<article>
+<footer>
+
+Benefits:
+- SEO friendly
+- Better accessibility
+- Cleaner structure
