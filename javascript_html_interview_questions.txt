@@ -1,0 +1,223 @@
+
+JavaScript & HTML Logical / Tricky Interview Questions (7+ Years Experience)
+
+1. Output Prediction (Type Coercion)
+Code:
+console.log(1 + "2" + "2");
+console.log(1 + +"2" + "2");
+console.log(1 + -"1" + "2");
+console.log(+"1" + "1" + "2");
+console.log("A" - "B" + "2");
+console.log("A" - "B" + 2);
+
+Answer:
+"122"
+"32"
+"02"
+"112"
+"NaN2"
+NaN
+
+Explanation:
+JavaScript performs implicit type conversion. When a string is involved with +, concatenation happens. Unary + converts strings to numbers.
+
+2. Difference between == and ===
+Example:
+console.log(0 == false);   // true
+console.log(0 === false);  // false
+
+Answer:
+==  → loose equality (type conversion allowed)
+=== → strict equality (no type conversion)
+
+3. setTimeout with var vs let
+Code:
+for (var i = 0; i < 3; i++) {
+  setTimeout(() => console.log(i), 1000);
+}
+
+Output:
+3
+3
+3
+
+Reason:
+var is function scoped.
+
+Correct version:
+for (let i = 0; i < 3; i++) {
+  setTimeout(() => console.log(i), 1000);
+}
+
+Output:
+0
+1
+2
+
+4. typeof null
+Code:
+console.log(typeof null);
+
+Output:
+object
+
+Explanation:
+Historical JavaScript bug.
+
+5. Closure
+Example:
+function outer() {
+  let count = 0;
+  return function inner() {
+    count++;
+    console.log(count);
+  };
+}
+
+const counter = outer();
+counter();
+counter();
+
+Output:
+1
+2
+
+Explanation:
+Closure allows a function to remember variables from its outer scope.
+
+6. Event Delegation
+HTML:
+<ul id="list">
+  <li>Item1</li>
+  <li>Item2</li>
+  <li>Item3</li>
+</ul>
+
+JavaScript:
+document.getElementById("list").addEventListener("click", function(e) {
+   console.log(e.target.innerText);
+});
+
+Explanation:
+Attach event to parent element instead of each child.
+
+7. call, apply, bind
+function greet(city) {
+   console.log(this.name + " from " + city);
+}
+
+const person = { name: "John" };
+
+call:
+greet.call(person, "Delhi");
+
+apply:
+greet.apply(person, ["Delhi"]);
+
+bind:
+const fn = greet.bind(person);
+fn("Delhi");
+
+8. Object Keys Conversion
+let a = {};
+let b = { key: "b" };
+let c = { key: "c" };
+
+a[b] = 123;
+a[c] = 456;
+
+console.log(a[b]);
+
+Output:
+456
+
+Explanation:
+Objects convert to "[object Object]" when used as keys.
+
+9. localStorage vs sessionStorage
+localStorage:
+Data persists even after browser restart.
+
+sessionStorage:
+Data removed when tab closes.
+
+Example:
+localStorage.setItem("name","John");
+sessionStorage.setItem("name","John");
+
+10. Script Loading
+Default behavior:
+HTML parsing stops when script runs.
+
+Solutions:
+<script defer src="app.js"></script>
+<script async src="app.js"></script>
+
+async → executes immediately
+defer → executes after HTML parsing
+
+11. innerHTML vs textContent
+innerHTML → parses HTML
+textContent → plain text
+
+12. Hoisting
+console.log(a);
+var a = 10;
+
+Output:
+undefined
+
+Reason:
+Declarations are hoisted.
+
+13. null vs undefined
+undefined → declared but not assigned
+null → intentional empty value
+
+14. Debouncing
+function debounce(fn, delay) {
+  let timer;
+  return function () {
+    clearTimeout(timer);
+    timer = setTimeout(() => fn(), delay);
+  };
+}
+
+15. display:none vs visibility:hidden
+display:none → removed from layout
+visibility:hidden → space remains
+
+16. Shadow DOM
+element.attachShadow({ mode: "open" });
+
+Used for Web Components.
+
+17. DOMContentLoaded vs load
+DOMContentLoaded → HTML parsed
+load → full page including images
+
+18. Event Loop
+Priority:
+1. Call Stack
+2. Microtask Queue (Promises)
+3. Callback Queue (setTimeout)
+
+19. [] + []
+console.log([] + []);
+
+Output:
+""
+
+Explanation:
+[] converts to empty string.
+
+20. Why JavaScript is asynchronous
+Because of:
+Event Loop
+Web APIs
+Callback Queue
+
+Examples:
+setTimeout
+fetch
+DOM events
