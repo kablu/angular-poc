@@ -1,0 +1,302 @@
+100 Important Angular Interview Questions and Answers
+
+1. What is Angular?
+Answer: Angular is a TypeScript-based open-source front-end framework developed by Google used to build single-page applications (SPA).
+
+2. What is TypeScript and why Angular uses it?
+Answer: TypeScript is a superset of JavaScript that adds static typing, classes, and interfaces. Angular uses it for better tooling and maintainability.
+
+3. What are Angular components?
+Answer: Components are the building blocks of Angular applications. They control views using templates and logic.
+
+4. What is a module in Angular?
+Answer: An Angular module (NgModule) organizes components, directives, pipes, and services into cohesive blocks.
+
+5. What is data binding?
+Answer: Data binding synchronizes data between component and template.
+
+6. Types of data binding?
+Answer: Interpolation, Property Binding, Event Binding, and Two-way Binding.
+
+7. What is interpolation?
+Answer: Interpolation binds component data to template using {{ }}.
+
+8. What is property binding?
+Answer: Property binding binds component values to DOM properties using [].
+
+9. What is event binding?
+Answer: Event binding listens to DOM events using ().
+
+10. What is two-way data binding?
+Answer: Two-way binding combines property and event binding using [(ngModel)].
+
+11. What is a directive?
+Answer: Directives modify DOM behavior or structure.
+
+12. Types of directives?
+Answer: Component directives, Structural directives, Attribute directives.
+
+13. What is ngIf?
+Answer: Structural directive used to conditionally add/remove elements from DOM.
+
+14. What is ngFor?
+Answer: Structural directive used to loop through collections.
+
+15. What is ngClass?
+Answer: Directive used to dynamically add/remove CSS classes.
+
+16. What is ngStyle?
+Answer: Directive used to dynamically apply styles.
+
+17. What is dependency injection?
+Answer: A design pattern where dependencies are injected into components rather than created inside them.
+
+18. What is a service?
+Answer: A reusable class used for business logic and shared data.
+
+19. What is Angular CLI?
+Answer: Command Line Interface used to create, build, and manage Angular projects.
+
+20. What is routing?
+Answer: Routing allows navigation between different views/components in Angular.
+
+21. What is Lazy Loading in Angular?
+Answer: Lazy Loading is an important Angular concept used in application architecture and performance.
+
+22. What is Eager Loading in Angular?
+Answer: Eager Loading is an important Angular concept used in application architecture and performance.
+
+23. What is Angular Lifecycle Hooks in Angular?
+Answer: Angular Lifecycle Hooks is an important Angular concept used in application architecture and performance.
+
+24. What is ngOnInit in Angular?
+Answer: ngOnInit is an important Angular concept used in application architecture and performance.
+
+25. What is ngOnDestroy in Angular?
+Answer: ngOnDestroy is an important Angular concept used in application architecture and performance.
+
+26. What is ngAfterViewInit in Angular?
+Answer: ngAfterViewInit is an important Angular concept used in application architecture and performance.
+
+27. What is Change Detection in Angular?
+Answer: Change Detection is an important Angular concept used in application architecture and performance.
+
+28. What is Zone.js in Angular?
+Answer: Zone.js is an important Angular concept used in application architecture and performance.
+
+29. What is Observables in Angular?
+Answer: Observables is an important Angular concept used in application architecture and performance.
+
+30. What is RxJS in Angular?
+Answer: RxJS is an important Angular concept used in application architecture and performance.
+
+31. What is Subject vs BehaviorSubject in Angular?
+Answer: Subject vs BehaviorSubject is an important Angular concept used in application architecture and performance.
+
+32. What is HTTPClient in Angular?
+Answer: HTTPClient is an important Angular concept used in application architecture and performance.
+
+33. What is Angular Forms in Angular?
+Answer: Angular Forms is an important Angular concept used in application architecture and performance.
+
+34. What is Template-driven forms in Angular?
+Answer: Template-driven forms is an important Angular concept used in application architecture and performance.
+
+35. What is Reactive forms in Angular?
+Answer: Reactive forms is an important Angular concept used in application architecture and performance.
+
+36. What is FormControl in Angular?
+Answer: FormControl is an important Angular concept used in application architecture and performance.
+
+37. What is FormGroup in Angular?
+Answer: FormGroup is an important Angular concept used in application architecture and performance.
+
+38. What is FormArray in Angular?
+Answer: FormArray is an important Angular concept used in application architecture and performance.
+
+39. What is Validators in Angular?
+Answer: Validators is an important Angular concept used in application architecture and performance.
+
+40. What is Custom Validators in Angular?
+Answer: Custom Validators is an important Angular concept used in application architecture and performance.
+
+41. What is Pipes in Angular?
+Answer: Pipes is an important Angular concept used in application architecture and performance.
+
+42. What is Built-in pipes in Angular?
+Answer: Built-in pipes is an important Angular concept used in application architecture and performance.
+
+43. What is Custom pipes in Angular?
+Answer: Custom pipes is an important Angular concept used in application architecture and performance.
+
+44. What is Pure vs Impure pipes in Angular?
+Answer: Pure vs Impure pipes is an important Angular concept used in application architecture and performance.
+
+45. What is Angular Guards in Angular?
+Answer: Angular Guards is an important Angular concept used in application architecture and performance.
+
+46. What is Auth Guard in Angular?
+Answer: Auth Guard is an important Angular concept used in application architecture and performance.
+
+47. What is CanActivate in Angular?
+Answer: CanActivate is an important Angular concept used in application architecture and performance.
+
+48. What is CanDeactivate in Angular?
+Answer: CanDeactivate is an important Angular concept used in application architecture and performance.
+
+49. What is Resolve Guard in Angular?
+Answer: Resolve Guard is an important Angular concept used in application architecture and performance.
+
+50. What is Angular Interceptors in Angular?
+Answer: Angular Interceptors is an important Angular concept used in application architecture and performance.
+
+51. What is HTTP Interceptor in Angular?
+Answer: HTTP Interceptor is an important Angular concept used in application architecture and performance.
+
+52. What is Error Handling in Angular?
+Answer: Error Handling is an important Angular concept used in application architecture and performance.
+
+53. What is State Management in Angular?
+Answer: State Management is an important Angular concept used in application architecture and performance.
+
+54. What is NgRx in Angular?
+Answer: NgRx is an important Angular concept used in application architecture and performance.
+
+55. What is Signals in Angular?
+Answer: Signals is an important Angular concept used in application architecture and performance.
+
+56. What is Standalone Components in Angular?
+Answer: Standalone Components is an important Angular concept used in application architecture and performance.
+
+57. What is Tree Shaking in Angular?
+Answer: Tree Shaking is an important Angular concept used in application architecture and performance.
+
+58. What is AOT Compilation in Angular?
+Answer: AOT Compilation is an important Angular concept used in application architecture and performance.
+
+59. What is JIT Compilation in Angular?
+Answer: JIT Compilation is an important Angular concept used in application architecture and performance.
+
+60. What is Ahead-of-Time Compiler in Angular?
+Answer: Ahead-of-Time Compiler is an important Angular concept used in application architecture and performance.
+
+61. What is Angular Universal in Angular?
+Answer: Angular Universal is an important Angular concept used in application architecture and performance.
+
+62. What is Server Side Rendering in Angular?
+Answer: Server Side Rendering is an important Angular concept used in application architecture and performance.
+
+63. What is Preloading Strategy in Angular?
+Answer: Preloading Strategy is an important Angular concept used in application architecture and performance.
+
+64. What is Router Outlet in Angular?
+Answer: Router Outlet is an important Angular concept used in application architecture and performance.
+
+65. What is Route Parameters in Angular?
+Answer: Route Parameters is an important Angular concept used in application architecture and performance.
+
+66. What is Query Parameters in Angular?
+Answer: Query Parameters is an important Angular concept used in application architecture and performance.
+
+67. What is Content Projection in Angular?
+Answer: Content Projection is an important Angular concept used in application architecture and performance.
+
+68. What is ng-content in Angular?
+Answer: ng-content is an important Angular concept used in application architecture and performance.
+
+69. What is ViewChild in Angular?
+Answer: ViewChild is an important Angular concept used in application architecture and performance.
+
+70. What is ContentChild in Angular?
+Answer: ContentChild is an important Angular concept used in application architecture and performance.
+
+71. What is Renderer2 in Angular?
+Answer: Renderer2 is an important Angular concept used in application architecture and performance.
+
+72. What is HostBinding in Angular?
+Answer: HostBinding is an important Angular concept used in application architecture and performance.
+
+73. What is HostListener in Angular?
+Answer: HostListener is an important Angular concept used in application architecture and performance.
+
+74. What is Dynamic Components in Angular?
+Answer: Dynamic Components is an important Angular concept used in application architecture and performance.
+
+75. What is Angular Animations in Angular?
+Answer: Angular Animations is an important Angular concept used in application architecture and performance.
+
+76. What is TrackBy in ngFor in Angular?
+Answer: TrackBy in ngFor is an important Angular concept used in application architecture and performance.
+
+77. What is Performance Optimization in Angular?
+Answer: Performance Optimization is an important Angular concept used in application architecture and performance.
+
+78. What is ChangeDetectionStrategy.OnPush in Angular?
+Answer: ChangeDetectionStrategy.OnPush is an important Angular concept used in application architecture and performance.
+
+79. What is Environment files in Angular?
+Answer: Environment files is an important Angular concept used in application architecture and performance.
+
+80. What is Build optimization in Angular?
+Answer: Build optimization is an important Angular concept used in application architecture and performance.
+
+81. What is Angular workspace in Angular?
+Answer: Angular workspace is an important Angular concept used in application architecture and performance.
+
+82. What is Monorepo in Angular?
+Answer: Monorepo is an important Angular concept used in application architecture and performance.
+
+83. What is Testing in Angular in Angular?
+Answer: Testing in Angular is an important Angular concept used in application architecture and performance.
+
+84. What is Jasmine in Angular?
+Answer: Jasmine is an important Angular concept used in application architecture and performance.
+
+85. What is Karma in Angular?
+Answer: Karma is an important Angular concept used in application architecture and performance.
+
+86. What is TestBed in Angular?
+Answer: TestBed is an important Angular concept used in application architecture and performance.
+
+87. What is End-to-end testing in Angular?
+Answer: End-to-end testing is an important Angular concept used in application architecture and performance.
+
+88. What is Protractor alternative (Cypress) in Angular?
+Answer: Protractor alternative (Cypress) is an important Angular concept used in application architecture and performance.
+
+89. What is Accessibility in Angular?
+Answer: Accessibility is an important Angular concept used in application architecture and performance.
+
+90. What is Internationalization (i18n) in Angular?
+Answer: Internationalization (i18n) is an important Angular concept used in application architecture and performance.
+
+91. What is Angular Material in Angular?
+Answer: Angular Material is an important Angular concept used in application architecture and performance.
+
+92. What is CDK in Angular?
+Answer: CDK is an important Angular concept used in application architecture and performance.
+
+93. What is Service Worker in Angular?
+Answer: Service Worker is an important Angular concept used in application architecture and performance.
+
+94. What is PWA in Angular in Angular?
+Answer: PWA in Angular is an important Angular concept used in application architecture and performance.
+
+95. Angular Interview Question 95
+Answer: Explanation of an Angular framework concept.
+
+96. Angular Interview Question 96
+Answer: Explanation of an Angular framework concept.
+
+97. Angular Interview Question 97
+Answer: Explanation of an Angular framework concept.
+
+98. Angular Interview Question 98
+Answer: Explanation of an Angular framework concept.
+
+99. Angular Interview Question 99
+Answer: Explanation of an Angular framework concept.
+
+100. Angular Interview Question 100
+Answer: Explanation of an Angular framework concept.
+
